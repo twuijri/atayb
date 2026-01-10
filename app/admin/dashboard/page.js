@@ -238,13 +238,14 @@ export default function Dashboard() {
                 </div>
             </header>
 
-            {/* Logo Upload Section */}
+            {/* Header Image Upload Section */}
             <div className={styles.logoSection}>
-                <h2>الشعار</h2>
+                <h2>الهيدر</h2>
+                <p className={styles.logoDescription}>رفع صورة الهيدر (يفضل أن تكون بحجم واسع مثل 1920x400)</p>
                 <div className={styles.logoUploadContainer}>
                     <label className={styles.logoUploadLabel}>
                         <ImageIcon size={32} />
-                        <span>{uploading ? 'جاري الرفع...' : 'رفع الشعار'}</span>
+                        <span>{uploading ? 'جاري الرفع...' : 'رفع صورة الهيدر'}</span>
                         <input 
                             type="file" 
                             accept="image/*" 
@@ -255,8 +256,8 @@ export default function Dashboard() {
                     </label>
                     {logoUpload && (
                         <div className={styles.logoPreview}>
-                            <img src={logoUpload} alt="Uploaded Logo" />
-                            <p>✓ تم رفع الشعار بنجاح</p>
+                            <img src={logoUpload} alt="Uploaded Header" />
+                            <p>✓ تم رفع الهيدر بنجاح</p>
                         </div>
                     )}
                 </div>
