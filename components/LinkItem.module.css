@@ -12,6 +12,13 @@
     width: 100%;
 }
 
+/* Horizontal display card - not full width */
+.horizontalCard {
+    width: auto;
+    min-width: 280px;
+    max-width: 400px;
+}
+
 .catalogCard::before {
     content: '';
     position: absolute;
