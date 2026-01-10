@@ -332,6 +332,24 @@ export default function Dashboard() {
                                         <option value="map-pin">Map Pin</option>
                                     </select>
                                 </div>
+                                <div className={styles.formGroup}>
+                                    <label>طريقة العرض</label>
+                                    <select value={formData.display_style || 'icon'} onChange={e => handleFormChange('display_style', e.target.value)}>
+                                        <option value="icon">مربع صغير (بدون اسم)</option>
+                                        <option value="horizontal">مستطيل طويل (مع اسم)</option>
+                                    </select>
+                                </div>
+                                {(formData.display_style === 'horizontal') && (
+                                    <div className={styles.formGroup}>
+                                        <label>وصف أو نص إضافي</label>
+                                        <input
+                                            type="text"
+                                            value={formData.description || ''}
+                                            onChange={e => handleFormChange('description', e.target.value)}
+                                            placeholder="مثال: اطلع على قائمة منتجاتنا الكاملة"
+                                        />
+                                    </div>
+                                )}
                                 {formData.type === 'pdf' && (
                                     <div className={styles.formGroup}>
                                         <label>صورة الكاتلوج (اختياري)</label>

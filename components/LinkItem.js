@@ -14,13 +14,16 @@ const IconMap = {
 };
 
 export default function LinkItem({ link }) {
-    const { id, title, type, url, icon, image } = link;
+    const { id, title, type, url, icon, image, display_style, description } = link;
     const router = useRouter();
     const IconComponent = IconMap[icon] || LinkIcon;
 
     const showTitle = !!title && title.trim().length > 0;
     const isCatalog = type === 'pdf';
     const isShoppingLink = type === 'link';
+    
+    // If link has display_style = 'horizontal', show as horizontal card
+    const showHorizontal = display_style === 'horizontal';
 
     const handleClick = (e) => {
         // Track the click reliably
@@ -55,7 +58,7 @@ export default function LinkItem({ link }) {
     };
 
     // Catalog card - full width with text and optional image
-    if (isCatalog) {
+    if (isCatalog && !showHorizontal) {
         return (
             <a
                 href={url}
@@ -83,6 +86,44 @@ export default function LinkItem({ link }) {
                     <div className={styles.catalogText}>
                         <h2 className={styles.catalogTitle}>{title}</h2>
                         <p className={styles.catalogDesc}>اطلع على قائمة منتجاتنا الكاملة</p>
+                    </div>
+                    <div className={styles.catalogArrow}>
+                        <ArrowLeft size={20} color="#C6A87C" />
+                    </div>
+                </div>
+            </a>
+        );
+    }
+
+    // Horizontal card - for links with display_style = 'horizontal'
+    if (showHorizontal) {
+        return (
+            <a
+                href={url}
+                onClick={handleClick}
+                target={type === 'pdf' ? '_self' : '_blank'}
+                rel="noopener noreferrer"
+                className={styles.catalogCard}
+                title={title}
+            >
+                <div className={styles.catalogContent}>
+                    <div className={styles.catalogIcon}>
+                        {image ? (
+                            <div style={{ position: 'relative', width: '56px', height: '56px' }}>
+                                <Image
+                                    src={image}
+                                    alt={title || 'link'}
+                                    fill
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </div>
+                        ) : (
+                            <IconComponent size={32} color="#C6A87C" strokeWidth={1.5} />
+                        )}
+                    </div>
+                    <div className={styles.catalogText}>
+                        <h2 className={styles.catalogTitle}>{title}</h2>
+                        <p className={styles.catalogDesc}>{description || (type === 'whatsapp' ? 'تواصل معنا' : 'عرض المزيد')}</p>
                     </div>
                     <div className={styles.catalogArrow}>
                         <ArrowLeft size={20} color="#C6A87C" />
