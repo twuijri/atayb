@@ -90,9 +90,26 @@ export default function Dashboard() {
 
     const handleDelete = async (id) => {
         if (!confirm('هل أنت متأكد من الحذف؟')) return;
-        const newLinks = links.filter(l => l.id !== id);
-        setLinks(newLinks);
-        await saveLinks(newLinks);
+        
+        try {
+            const response = await fetch('/api/links', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+
+            if (!response.ok) {
+                alert('فشل الحذف');
+                return;
+            }
+
+            const newLinks = links.filter(l => l.id !== id);
+            setLinks(newLinks);
+            fetchData();
+        } catch (error) {
+            console.error('Error deleting:', error);
+            alert('حدث خطأ في الحذف');
+        }
     };
 
     const handleMove = async (index, direction) => {

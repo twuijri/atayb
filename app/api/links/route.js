@@ -44,3 +44,29 @@ export async function POST(request) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }
+
+export async function DELETE(request) {
+    try {
+        const body = await request.json();
+        const { id } = body;
+
+        if (!id) {
+            return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
+        }
+
+        const { error } = await supabaseServer
+            .from('links')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error deleting link:', error);
+            return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ success: true, message: "Link deleted" });
+    } catch (error) {
+        console.error('Error deleting link:', error);
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
+}
