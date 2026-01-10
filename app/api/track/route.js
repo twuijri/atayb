@@ -10,6 +10,7 @@ export async function POST(request) {
         const { data: stats, error: fetchError } = await supabaseServer
             .from('stats')
             .select('*')
+            .order('id', { ascending: true })
             .limit(1)
             .single();
 
@@ -71,6 +72,7 @@ export async function GET() {
         const { data: stats, error } = await supabaseServer
             .from('stats')
             .select('*')
+            .order('id', { ascending: true })
             .limit(1)
             .single();
 
