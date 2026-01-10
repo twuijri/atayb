@@ -2,6 +2,7 @@
 
 import styles from './Header.module.css';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState(null);
@@ -22,17 +23,18 @@ export default function Header() {
   }, []);
 
   return (
-    <header 
-      className={styles.header}
-      style={headerImage ? { backgroundImage: `url(${headerImage})` } : {}}
-    >
-      {!headerImage && (
-        <div className={styles.headerContent}>
-          <div className={styles.logoContainer}>
-            <div className={styles.logoText}>
-              <span className={styles.brandName}>أطايب التمور</span>
-              <span className={styles.brandSub}>Atayeb Altomor</span>
-            </div>
+    <header className={styles.header}>
+      {headerImage ? (
+        <img 
+          src={headerImage} 
+          alt="Header" 
+          className={styles.headerImg}
+        />
+      ) : (
+        <div className={styles.defaultHeader}>
+          <div className={styles.logoText}>
+            <span className={styles.brandName}>أطايب التمور</span>
+            <span className={styles.brandSub}>Atayeb Altomor</span>
           </div>
 
           <div className={styles.decorativeLine}></div>
