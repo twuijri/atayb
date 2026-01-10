@@ -32,9 +32,10 @@ export async function POST(request) {
         // Save updated stats
         const updateData = {
             page_views: pageViews,
-            link_clicks: linkClicks,
-            updated_at: new Date()
+            link_clicks: linkClicks
         };
+
+        console.log('Saving stats:', { statsId, ...updateData });
 
         // If we have an ID, update that row. Otherwise insert new
         let saveError;
@@ -44,11 +45,13 @@ export async function POST(request) {
                 .update(updateData)
                 .eq('id', statsId);
             saveError = response.error;
+            console.log('Update response:', response);
         } else {
             const response = await supabaseServer
                 .from('stats')
                 .insert([updateData]);
             saveError = response.error;
+            console.log('Insert response:', response);
         }
 
         if (saveError) {
@@ -68,7 +71,7 @@ export async function GET() {
         const { data: stats, error } = await supabaseServer
             .from('stats')
             .select('*')
-            .eq('id', 1)
+            .limit(1)
             .single();
 
         if (error && error.code !== 'PGRST116') {
