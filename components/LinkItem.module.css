@@ -1,0 +1,266 @@
+/* CATALOG CARD - Full width with text */
+.catalogCard {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.catalogCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--secondary), var(--accent), var(--secondary));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.catalogCard:hover {
+    border-color: var(--secondary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.catalogCard:hover::before {
+    opacity: 1;
+}
+
+.catalogContent {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.catalogIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, rgba(198, 168, 124, 0.15), rgba(212, 175, 55, 0.1));
+    border-radius: 14px;
+    flex-shrink: 0;
+}
+
+.catalogText {
+    flex: 1;
+    text-align: right;
+}
+
+.catalogTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.3px;
+}
+
+.catalogDesc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    opacity: 0.8;
+}
+
+.catalogArrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(198, 168, 124, 0.08);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.catalogCard:hover .catalogArrow {
+    background: rgba(198, 168, 124, 0.15);
+    transform: translateX(-3px);
+}
+
+/* ICON-ONLY CARDS - Shopping links and WhatsApp */
+.iconOnlyCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 100px;
+}
+
+.iconOnlyCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(198, 168, 124, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.iconOnlyCard:hover {
+    border-color: var(--secondary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.iconOnlyCard:hover::before {
+    opacity: 1;
+}
+
+.iconOnlyContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+}
+
+.iconImageContainer {
+    position: relative;
+    width: 70%;
+    height: 70%;
+    transition: transform 0.3s;
+}
+
+.iconOnlyCard:hover .iconImageContainer {
+    transform: scale(1.08);
+}
+
+.iconLogo {
+    border-radius: 50%;
+}
+
+/* RESPONSIVE GRID LAYOUT */
+.linksContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.catalogContainer {
+    width: 100%;
+}
+
+.iconsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+/* TABLET - 768px and up */
+@media (min-width: 768px) {
+    .catalogCard {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .catalogIcon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+    }
+
+    .catalogTitle {
+        font-size: 20px;
+    }
+
+    .catalogDesc {
+        font-size: 14px;
+    }
+
+    .iconsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 16px;
+    }
+
+    .iconOnlyCard {
+        min-width: 120px;
+        border-radius: 16px;
+    }
+
+    .linksContainer {
+        gap: 20px;
+    }
+}
+
+/* DESKTOP - 1024px and up */
+@media (min-width: 1024px) {
+    .iconsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 20px;
+    }
+
+    .iconOnlyCard {
+        min-width: 140px;
+        border-radius: 18px;
+    }
+
+    .catalogCard {
+        padding: 28px;
+    }
+}
+
+/* MOBILE - Small screens */
+@media (max-width: 480px) {
+    .catalogCard {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .catalogIcon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+    }
+
+    .catalogTitle {
+        font-size: 16px;
+    }
+
+    .catalogDesc {
+        font-size: 12px;
+    }
+
+    .catalogArrow {
+        width: 36px;
+        height: 36px;
+    }
+
+    .iconsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+        gap: 10px;
+    }
+
+    .iconOnlyCard {
+        min-width: 85px;
+        border-radius: 12px;
+    }
+
+    .linksContainer {
+        gap: 12px;
+    }
+}

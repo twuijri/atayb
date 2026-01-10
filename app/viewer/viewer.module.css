@@ -1,0 +1,136 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: var(--background);
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--surface);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.backBtn,
+.downloadBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.backBtn {
+    color: var(--primary);
+    background: transparent;
+}
+
+.backBtn:hover {
+    background: rgba(62, 39, 35, 0.05);
+    /* primary with opacity */
+}
+
+.downloadBtn {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 5px rgba(62, 39, 35, 0.2);
+}
+
+.downloadBtn:hover {
+    background: var(--primary-light);
+}
+
+.title {
+    font-weight: bold;
+    color: var(--text-main);
+    display: none;
+    /* Hidden on mobile usually, show on desktop if needed */
+}
+
+@media (min-width: 768px) {
+    .title {
+        display: block;
+    }
+}
+
+.frameContainer {
+    flex: 1;
+    width: 100vw;
+    height: 100%;
+    position: relative;
+    background: #f0f0f0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+}
+
+.object {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+.embed {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+.fallbackMessage {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    display: none;
+    z-index: 100;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: var(--text-main);
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: var(--error);
+}

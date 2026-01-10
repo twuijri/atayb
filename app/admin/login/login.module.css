@@ -1,0 +1,201 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    padding: 20px;
+}
+
+.loginBox {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    padding: 40px 30px;
+    text-align: center;
+    color: white;
+}
+
+.logo {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brandName {
+    font-size: 28px;
+    font-weight: 900;
+    color: #FFFFFF;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.form {
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputGroup label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.input {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    text-align: right;
+    width: 100%;
+    font-family: 'Tajawal', sans-serif;
+    background-color: #F9F9F9;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(198, 168, 124, 0.1);
+}
+
+.input:disabled {
+    background-color: #F0F0F0;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.button {
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+    color: var(--primary-dark);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Tajawal', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.error {
+    padding: 14px 16px;
+    background-color: rgba(211, 47, 47, 0.1);
+    border: 1px solid #D32F2F;
+    border-radius: 10px;
+    color: #D32F2F;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+    animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    background-color: #FAFAFA;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .loginBox {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .header {
+        padding: 30px 20px;
+    }
+
+    .brandName {
+        font-size: 24px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .form {
+        padding: 30px 20px;
+        gap: 20px;
+    }
+
+    .input,
+    .button {
+        font-size: 16px;
+        padding: 12px 14px;
+    }
+}

@@ -1,36 +1,208 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Atayb Altomor - QR Code & Link Generator
+
+Professional QR code and link management system with advanced tracking, PDF catalog display, and admin dashboard.
+
+## Features
+
+- 📱 **QR Code Generation** - Generate custom QR codes with real-time tracking
+- 📊 **Analytics Dashboard** - Track clicks, views, and user engagement
+- 📄 **PDF Catalog Display** - Upload and display multiple PDFs with device-optimized viewing
+- 🎨 **Professional Branding** - Custom logo upload and brand color configuration
+- 🔐 **Admin Panel** - Secure authentication with link and asset management
+- 📲 **Mobile Optimized** - Full responsive design with RTL Arabic support
+- 🐳 **Docker Ready** - Production-ready containerization
+
+## Tech Stack
+
+- **Frontend**: Next.js 16.1.1 with React 19.2.3
+- **Styling**: CSS Modules with custom color variables
+- **Backend**: Next.js API Routes
+- **Data**: File-based JSON storage
+- **Deployment**: Docker & Docker Compose
+- **Authentication**: Server-side cookie management
 
 ## Getting Started
 
-First, run the development server:
+### Local Development
+
+1. **Clone and Install**
+   ```bash
+   git clone https://github.com/yourusername/atayb.git
+   cd atayb
+   npm install
+   ```
+
+2. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+3. **Access Application**
+   - Main site: http://localhost:3000
+   - Admin panel: http://localhost:3000/admin
+   - Login credentials: `admin` / `atayb2025`
+
+## Docker Deployment
+
+### Build Docker Image
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Build the image
+docker build -t yourusername/atayb-app:1.0 .
+
+# Tag as latest
+docker tag yourusername/atayb-app:1.0 yourusername/atayb-app:latest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run with Docker Compose
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+docker-compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Push to Docker Hub
 
-## Learn More
+```bash
+# Login to Docker Hub
+docker login
 
-To learn more about Next.js, take a look at the following resources:
+# Push image
+docker push yourusername/atayb-app:1.0
+docker push yourusername/atayb-app:latest
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Set to Private on Docker Hub UI
+# 1. Go to hub.docker.com
+# 2. Navigate to your repository settings
+# 3. Set to "Private"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Deploy on Portainer
 
-## Deploy on Vercel
+1. **Login to Portainer**
+2. **Create New Container**
+   - Image: `yourusername/atayb-app:1.0`
+   - Name: `atayb-app`
+   - Ports: `3000:3000`
+   - Volumes:
+     - `/path/to/data:/app/data`
+     - `/path/to/uploads:/app/public/uploads`
+   - Restart Policy: Always
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+├── app/
+│   ├── api/              # API routes (links, track, upload, config)
+│   ├── admin/            # Admin panel (login, dashboard)
+│   ├── viewer/           # PDF viewer page
+│   ├── layout.js         # Root layout
+│   └── page.js           # Home page
+├── components/           # React components (Header, LinkItem, etc)
+├── data/                 # JSON data files
+│   ├── links.json        # Links and catalog data
+│   ├── stats.json        # Analytics data
+│   └── config.json       # Logo and configuration
+├── public/
+│   └── uploads/          # User uploaded files
+├── Dockerfile            # Production Docker config
+├── docker-compose.yml    # Docker Compose config
+├── middleware.js         # Auth middleware for /admin
+└── next.config.mjs       # Next.js configuration
+```
+
+## API Endpoints
+
+### Links Management
+- `GET /api/links` - Fetch all links
+- `POST /api/links` - Create new link
+- `DELETE /api/links?id=ID` - Delete link
+
+### Tracking & Analytics
+- `GET /api/track` - Get analytics
+- `POST /api/track` - Record page view/click
+
+### File Upload
+- `POST /api/upload` - Upload file (PDF, image)
+
+### Configuration
+- `GET /api/config` - Get site configuration (logo, branding)
+- `POST /api/config` - Update configuration
+
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+
+## Environment Variables
+
+Create `.env.local` if needed:
+
+```env
+# Optional: customize admin credentials
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=atayb2025
+```
+
+## Data Persistence
+
+When running in Docker, ensure volumes are properly configured:
+
+```bash
+# Data directory (links, stats, config)
+-v ./data:/app/data
+
+# Uploads directory (PDFs, images)
+-v ./public/uploads:/app/public/uploads
+```
+
+## Admin Dashboard Features
+
+- ✅ Create/edit/delete links with custom names
+- ✅ Upload PDF catalogs
+- ✅ View detailed analytics
+- ✅ Upload and manage custom logo
+- ✅ Generate QR codes
+- ✅ Track user engagement
+
+## Troubleshooting
+
+### Container won't start
+- Check volume paths exist
+- Verify port 3000 is available
+- Check Docker logs: `docker logs container-name`
+
+### Data not persisting
+- Ensure volumes are mounted correctly
+- Check permissions on data directory
+- Verify volume path mappings in docker-compose.yml
+
+### PDFs not displaying
+- Verify file upload permissions
+- Check public/uploads directory exists
+- Try different browser for compatibility
+
+### Admin login fails
+- Verify middleware.js is active
+- Check browser cookies enabled
+- Clear browser cache and try again
+
+## Color Scheme
+
+- **Primary**: #2B2B2B (Dark Brown)
+- **Background**: #D4C4B0 (Warm Beige)
+- **Secondary**: #A89080 (Brown)
+- **Accent**: #B8A89A (Beige Accent)
+
+## Support & Documentation
+
+- See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment guide
+- Check `.dockerignore` for build optimization
+- Review `Dockerfile` for production build process
+
+## License
+
+Private project for Atayb Altomor
+
+---
+
+**Last Updated**: January 2025
+**Version**: 1.0.0 (Production Ready)

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  atayb-app:
+    container_name: atayb-app
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./public/uploads:/app/public/uploads
+    environment:
+      - NODE_ENV=production

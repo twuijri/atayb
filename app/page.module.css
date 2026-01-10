@@ -1,141 +1,104 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
+/* Main wrapping container */
+.container {
+  width: 100%;
   min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
   background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Desktop - Full width with max constraints */
+@media (min-width: 1025px) {
+  .container {
+    padding: 0 20px;
+    background: linear-gradient(135deg, var(--background) 0%, rgba(198, 168, 124, 0.03) 100%);
+  }
+}
+
+/* Main content area */
 .main {
   display: flex;
-  min-height: 100vh;
-  width: 100%;
-  max-width: 800px;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
   gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
-  flex-direction: row;
   width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+  max-width: 900px;
+  padding: 0 16px 40px 16px;
+  margin-top: 10px;
 }
 
-.ctas a {
+/* CATALOG SECTION - Full width */
+.catalogSection {
+  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+  flex-direction: column;
+  gap: 16px;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+/* LINKS SECTION - Grid for icons */
+.linksSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.iconsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  width: 100%;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-}
-
-@media (max-width: 600px) {
+/* TABLET - 768px and up */
+@media (min-width: 768px) {
   .main {
-    padding: 48px 24px;
+    gap: 32px;
+    padding: 0 24px 50px 24px;
   }
 
-  .intro {
+  .iconsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 16px;
   }
+}
 
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+/* DESKTOP - 1024px and up */
+@media (min-width: 1024px) {
+  .main {
+    gap: 40px;
+    padding: 20px 40px 60px 40px;
+    margin-top: 20px;
+  }
+
+  .iconsGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 600px;
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+/* LARGE DESKTOP - 1440px and up */
+@media (min-width: 1440px) {
+  .main {
+    max-width: 1000px;
+    padding: 30px 60px 80px 60px;
   }
 
-  .page {
-    --background: #000;
-    --foreground: #000;
+  .iconsGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+}
 
-    --text-primary: #ededed;
-    --text-secondary: #999;
+/* MOBILE - Small screens */
+@media (max-width: 480px) {
+  .main {
+    gap: 16px;
+    padding: 0 12px 30px 12px;
+  }
 
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+  .iconsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 }
