@@ -32,11 +32,7 @@ export async function POST(request) {
     const body = await request.json();
     let { logo } = body;
 
-    // Normalize logo path to always use /api/files
-    if (logo && !logo.startsWith('/api/files')) {
-      logo = `/api/files${logo.startsWith('/') ? logo : '/' + logo}`;
-    }
-
+    // Keep logo path as-is (now pointing to /uploads/)
     const config = {
       logo: logo || null
     };
