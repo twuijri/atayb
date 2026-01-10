@@ -241,7 +241,7 @@ export default function Dashboard() {
             {/* Header Image Upload Section */}
             <div className={styles.logoSection}>
                 <h2>الهيدر</h2>
-                <p className={styles.logoDescription}>رفع صورة الهيدر (يفضل أن تكون بحجم واسع مثل 1920x400)</p>
+                <p className={styles.logoDescription}>رفع صورة الهيدر (يفضل أن تكون بحجم 1920x900)</p>
                 <div className={styles.logoUploadContainer}>
                     <label className={styles.logoUploadLabel}>
                         <ImageIcon size={32} />

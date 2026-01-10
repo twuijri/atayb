@@ -9,7 +9,6 @@
     margin-bottom: 30px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     border-bottom: 2px solid #A89080;
-    min-height: 300px;
 }
 
 .headerImg {
@@ -22,6 +21,7 @@
     padding: 40px 20px 35px 20px;
     position: relative;
     z-index: 1;
+    background: #C5C2B4;
 }
 
 .headerContent {
