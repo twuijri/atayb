@@ -103,7 +103,7 @@ export default function LinkItem({ link }) {
                 onClick={handleClick}
                 target={type === 'pdf' ? '_self' : '_blank'}
                 rel="noopener noreferrer"
-                className={`${styles.catalogCard} ${styles.horizontalCard}`}
+                className={styles.catalogCard}
                 title={title}
             >
                 <div className={styles.catalogContent}>

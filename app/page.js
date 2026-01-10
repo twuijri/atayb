@@ -28,9 +28,10 @@ async function getLinks() {
 export default async function Home() {
   const links = await getLinks();
 
-  // Separate catalog PDFs from other links
-  const catalogLinks = links.filter(link => link.type === 'pdf');
-  const otherLinks = links.filter(link => link.type !== 'pdf');
+  // Separate links by type and display style
+  const catalogLinks = links.filter(link => link.type === 'pdf' && link.display_style !== 'horizontal');
+  const horizontalLinks = links.filter(link => link.display_style === 'horizontal');
+  const iconLinks = links.filter(link => link.type !== 'pdf' && link.display_style !== 'horizontal');
 
   return (
     <>
@@ -38,7 +39,16 @@ export default async function Home() {
       <div className={styles.container}>
         <Header />
         <main className={styles.main}>
-          {/* Catalog Section - Full Width for all PDFs */}
+          {/* Horizontal Cards Section - Full Width */}
+          {horizontalLinks.length > 0 && (
+            <div className={styles.catalogSection}>
+              {horizontalLinks.map((link) => (
+                <LinkItem key={link.id} link={link} />
+              ))}
+            </div>
+          )}
+
+          {/* Catalog Section - Full Width for PDF Cards */}
           {catalogLinks.length > 0 && (
             <div className={styles.catalogSection}>
               {catalogLinks.map((link) => (
@@ -47,11 +57,11 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Other Links Section - Grid Layout */}
-          {otherLinks.length > 0 && (
+          {/* Icon Links Section - Grid Layout */}
+          {iconLinks.length > 0 && (
             <div className={styles.linksSection}>
               <div className={styles.iconsGrid}>
-                {otherLinks.map((link) => (
+                {iconLinks.map((link) => (
                   <LinkItem key={link.id} link={link} />
                 ))}
               </div>
