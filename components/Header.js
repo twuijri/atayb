@@ -2,10 +2,10 @@
 
 import styles from './Header.module.css';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -17,6 +17,8 @@ export default function Header() {
         }
       } catch (error) {
         console.error('Error fetching config:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchConfig();
@@ -24,13 +26,14 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      {headerImage ? (
+      {headerImage && (
         <img 
           src={headerImage} 
           alt="Header" 
           className={styles.headerImg}
         />
-      ) : (
+      )}
+      {!headerImage && !isLoading && (
         <div className={styles.defaultHeader}>
           <div className={styles.logoText}>
             <span className={styles.brandName}>أطايب التمور</span>
