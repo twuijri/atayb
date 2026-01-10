@@ -14,8 +14,8 @@ export async function POST(request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Ensure upload directory exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    // Ensure upload directory exists (use /data for persistence)
+    const uploadDir = path.join(process.cwd(), 'data', 'uploads');
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -26,7 +26,7 @@ export async function POST(request) {
 
     try {
         await writeFile(filePath, buffer);
-        return NextResponse.json({ success: true, url: `/uploads/${filename}` });
+        return NextResponse.json({ success: true, url: `/api/files/uploads/${filename}` });
     } catch (error) {
         console.error("Upload error:", error);
         return NextResponse.json({ success: false }, { status: 500 });
