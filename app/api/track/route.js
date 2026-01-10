@@ -33,7 +33,6 @@ export async function POST(request) {
             .from('stats')
             .upsert(
                 {
-                    id: 1,
                     page_views: pageViews,
                     link_clicks: linkClicks,
                     updated_at: new Date()
