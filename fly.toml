@@ -17,8 +17,8 @@ primary_region = 'cdg'
   processes = ['app']
 
 [[mounts]]
-  source = 'data'
-  destination = '/app/data'
+  source = 'uploads'
+  destination = '/app/public/uploads'
 
 [[vm]]
   memory = '1gb'
