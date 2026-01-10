@@ -289,7 +289,7 @@ export default function Dashboard() {
                         {editingId === link.id ? (
                             <div className={styles.form}>
                                 <div className={styles.formGroup}>
-                                    <label>العنوان (أتركه فارغاً لعرض الشعار فقط)</label>
+                                    <label>العنوان</label>
                                     <input
                                         value={formData.title}
                                         onChange={e => handleFormChange('title', e.target.value)}
