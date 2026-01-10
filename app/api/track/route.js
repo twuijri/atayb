@@ -1,44 +1,77 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-const statsPath = path.join(process.cwd(), 'data', 'stats.json');
-
-// Helper to read stats
-const getStats = () => {
-    if (!fs.existsSync(statsPath)) {
-        return { pageViews: 0, clicks: {} };
-    }
-    const fileContent = fs.readFileSync(statsPath, 'utf8');
-    return JSON.parse(fileContent);
-};
-
-// Helper to write stats
-const saveStats = (data) => {
-    fs.writeFileSync(statsPath, JSON.stringify(data, null, 2));
-};
+import { supabaseServer } from '@/lib/supabase';
 
 export async function POST(request) {
     try {
         const body = await request.json();
         const { type, linkId } = body;
 
-        const stats = getStats();
+        // Get current stats
+        const { data: stats, error: fetchError } = await supabaseServer
+            .from('stats')
+            .select('*')
+            .eq('id', 1)
+            .single();
 
-        if (type === 'page_view') {
-            stats.pageViews = (stats.pageViews || 0) + 1;
-        } else if (type === 'click' && linkId) {
-            stats.clicks[linkId] = (stats.clicks[linkId] || 0) + 1;
+        if (fetchError && fetchError.code !== 'PGRST116') {
+            console.error('Error fetching stats:', fetchError);
+            return NextResponse.json({ success: false }, { status: 500 });
         }
 
-        saveStats(stats);
+        let pageViews = stats?.page_views || 0;
+        let linkClicks = stats?.link_clicks || {};
+
+        // Update stats
+        if (type === 'page_view') {
+            pageViews += 1;
+        } else if (type === 'click' && linkId) {
+            linkClicks[linkId] = (linkClicks[linkId] || 0) + 1;
+        }
+
+        // Save updated stats
+        const { error: saveError } = await supabaseServer
+            .from('stats')
+            .upsert(
+                {
+                    id: 1,
+                    page_views: pageViews,
+                    link_clicks: linkClicks,
+                    updated_at: new Date()
+                },
+                { onConflict: 'id' }
+            );
+
+        if (saveError) {
+            console.error('Error saving stats:', saveError);
+            return NextResponse.json({ success: false }, { status: 500 });
+        }
+
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error('Error tracking:', error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
 
 export async function GET() {
-    const stats = getStats();
-    return NextResponse.json(stats);
+    try {
+        const { data: stats, error } = await supabaseServer
+            .from('stats')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        if (error && error.code !== 'PGRST116') {
+            console.error('Error fetching stats:', error);
+            return NextResponse.json({ pageViews: 0, clicks: {} });
+        }
+
+        return NextResponse.json({
+            pageViews: stats?.page_views || 0,
+            clicks: stats?.link_clicks || {}
+        });
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+        return NextResponse.json({ pageViews: 0, clicks: {} });
+    }
 }
