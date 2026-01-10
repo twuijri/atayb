@@ -30,7 +30,12 @@ export async function POST(request) {
   try {
     initializeConfig();
     const body = await request.json();
-    const { logo } = body;
+    let { logo } = body;
+
+    // Normalize logo path to always use /api/files
+    if (logo && !logo.startsWith('/api/files')) {
+      logo = `/api/files${logo.startsWith('/') ? logo : '/' + logo}`;
+    }
 
     const config = {
       logo: logo || null
