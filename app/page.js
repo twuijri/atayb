@@ -2,19 +2,25 @@ import Header from '@/components/Header';
 import LinkItem from '@/components/LinkItem';
 import PageTracker from '@/components/PageTracker';
 import styles from './page.module.css';
-import fs from 'fs';
-import path from 'path';
+import { supabaseServer } from '@/lib/supabase';
 
 export const dynamic = 'force-dynamic';
 
 async function getLinks() {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'links.json');
-    if (!fs.existsSync(filePath)) return [];
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(fileContents);
+    const { data, error } = await supabaseServer
+      .from('links')
+      .select('*')
+      .order('order');
+    
+    if (error) {
+      console.error("Error reading links from Supabase:", error);
+      return [];
+    }
+    
+    return data || [];
   } catch (error) {
-    console.error("Error reading links:", error);
+    console.error("Error fetching links:", error);
     return [];
   }
 }
