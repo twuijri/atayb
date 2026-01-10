@@ -332,11 +332,20 @@ export default function Dashboard() {
                                         <option value="map-pin">Map Pin</option>
                                     </select>
                                 </div>
-                                <div className={styles.formGroup}>
-                                    <label>صورة الشعار (اختياري)</label>
-                                    <input type="file" onChange={handleImageUpload} />
-                                    {formData.image && <img src={formData.image} alt="Preview" className={styles.preview} />}
-                                </div>
+                                {formData.type === 'pdf' && (
+                                    <div className={styles.formGroup}>
+                                        <label>صورة الكاتلوج (اختياري)</label>
+                                        <input type="file" onChange={handleImageUpload} />
+                                        {formData.image && <img src={formData.image} alt="Preview" className={styles.preview} />}
+                                    </div>
+                                )}
+                                {formData.type !== 'pdf' && (
+                                    <div className={styles.formGroup}>
+                                        <label>صورة الشعار (اختياري)</label>
+                                        <input type="file" onChange={handleImageUpload} />
+                                        {formData.image && <img src={formData.image} alt="Preview" className={styles.preview} />}
+                                    </div>
+                                )}
                                 <div className={styles.actions}>
                                     <button onClick={handleSaveForm} className={styles.saveBtn}><Save size={16} /> حفظ</button>
                                     <button onClick={handleCancel} className={styles.cancelBtn}>إلغاء</button>

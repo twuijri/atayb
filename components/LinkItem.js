@@ -54,7 +54,7 @@ export default function LinkItem({ link }) {
         // Normal links and whatsapp handle themselves via <a> default behavior
     };
 
-    // Catalog card - full width with text
+    // Catalog card - full width with text and optional image
     if (isCatalog) {
         return (
             <a
@@ -67,7 +67,18 @@ export default function LinkItem({ link }) {
             >
                 <div className={styles.catalogContent}>
                     <div className={styles.catalogIcon}>
-                        {icon === 'book-open' && <BookOpen size={32} color="#C6A87C" strokeWidth={1.5} />}
+                        {image ? (
+                            <div style={{ position: 'relative', width: '56px', height: '56px' }}>
+                                <Image
+                                    src={image}
+                                    alt={title || 'catalog'}
+                                    fill
+                                    style={{ objectFit: 'contain' }}
+                                />
+                            </div>
+                        ) : (
+                            icon === 'book-open' && <BookOpen size={32} color="#C6A87C" strokeWidth={1.5} />
+                        )}
                     </div>
                     <div className={styles.catalogText}>
                         <h2 className={styles.catalogTitle}>{title}</h2>
