@@ -6,11 +6,11 @@ export async function POST(request) {
         const body = await request.json();
         const { type, linkId } = body;
 
-        // Get current stats
+        // Get current stats (just get the first row)
         const { data: stats, error: fetchError } = await supabaseServer
             .from('stats')
             .select('*')
-            .eq('id', 1)
+            .limit(1)
             .single();
 
         if (fetchError && fetchError.code !== 'PGRST116') {
@@ -18,6 +18,7 @@ export async function POST(request) {
             return NextResponse.json({ success: false }, { status: 500 });
         }
 
+        const statsId = stats?.id || null;
         let pageViews = stats?.page_views || 0;
         let linkClicks = stats?.link_clicks || {};
 
@@ -29,16 +30,26 @@ export async function POST(request) {
         }
 
         // Save updated stats
-        const { error: saveError } = await supabaseServer
-            .from('stats')
-            .upsert(
-                {
-                    page_views: pageViews,
-                    link_clicks: linkClicks,
-                    updated_at: new Date()
-                },
-                { onConflict: 'id' }
-            );
+        const updateData = {
+            page_views: pageViews,
+            link_clicks: linkClicks,
+            updated_at: new Date()
+        };
+
+        // If we have an ID, update that row. Otherwise insert new
+        let saveError;
+        if (statsId) {
+            const response = await supabaseServer
+                .from('stats')
+                .update(updateData)
+                .eq('id', statsId);
+            saveError = response.error;
+        } else {
+            const response = await supabaseServer
+                .from('stats')
+                .insert([updateData]);
+            saveError = response.error;
+        }
 
         if (saveError) {
             console.error('Error saving stats:', saveError);
