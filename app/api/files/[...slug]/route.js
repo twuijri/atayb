@@ -4,11 +4,18 @@ import path from 'path';
 
 export async function GET(request, { params }) {
   try {
-    const slug = params.slug.join('/');
+    // Handle params properly for catch-all route
+    const slug = Array.isArray(params?.slug) ? params.slug.join('/') : params?.slug || '';
+    
+    if (!slug) {
+      return NextResponse.json({ error: 'No file specified' }, { status: 400 });
+    }
+
     const filePath = path.join(process.cwd(), 'data', slug);
 
     // Security check - prevent directory traversal
-    if (!filePath.startsWith(path.join(process.cwd(), 'data'))) {
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!filePath.startsWith(dataDir)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -23,6 +30,7 @@ export async function GET(request, { params }) {
       headers: {
         'Content-Type': contentType,
         'Content-Disposition': 'inline',
+        'Cache-Control': 'public, max-age=3600',
       },
     });
   } catch (error) {
