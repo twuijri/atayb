@@ -40,19 +40,11 @@ export async function POST(request) {
     // Save config
     await fs.writeFile(configPath, JSON.stringify(config, null, 2));
     
-    return Response.json({ success: true, data: config
-      )
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error saving config:', error);
-      return Response.json({ error: error.message }, { status: 500 });
-    }
-
-    return Response.json({ success: true, config: data });
+    return Response.json({ success: true, data: config });
   } catch (error) {
     console.error('Error saving config:', error);
     return Response.json({ error: error.message }, { status: 500 });
+  }
+}
   }
 }

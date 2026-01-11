@@ -13,10 +13,9 @@ services:
         apk add --no-cache git
         rm -rf /tmp/repo
         git clone https://github.com/twuijri/atayb.git /tmp/repo
-        rm -rf /app/*
         cp -r /tmp/repo/. /app/
         rm -rf /tmp/repo
-        mkdir -p /app/data
+        mkdir -p /app/data /app/public/uploads
         if [ ! -f /app/data/config.json ]; then
           echo '{"adminUsername":"admin","adminPassword":"password"}' > /app/data/config.json
         fi

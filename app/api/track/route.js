@@ -30,24 +30,6 @@ export async function GET() {
         return NextResponse.json({ page_view: 0, link_clicks: 0, unique_visitors: 0 });
     }
 }
-            const response = await supabaseServer
-                .from('stats')
-                .insert([updateData]);
-            saveError = response.error;
-            console.log('Insert response:', response);
-        }
-
-        if (saveError) {
-            console.error('Error saving stats:', saveError);
-            return NextResponse.json({ success: false }, { status: 500 });
-        }
-
-        return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error('Error tracking:', error);
-        return NextResponse.json({ success: false }, { status: 500 });
-    }
-}
 
 export async function GET() {
     try {
