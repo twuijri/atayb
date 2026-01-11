@@ -14,13 +14,30 @@ export default function Login() {
     const router = useRouter();
 
     useEffect(() => {
-        // Check if setup is needed
-        checkSetupStatus();
+        // Check if setup is needed with timeout
+        const timeoutId = setTimeout(() => {
+            console.log('Setup check timeout - showing login page');
+            setCheckingSetup(false);
+        }, 3000); // 3 second timeout
+        
+        checkSetupStatus().finally(() => {
+            clearTimeout(timeoutId);
+        });
+        
+        return () => clearTimeout(timeoutId);
     }, []);
 
     const checkSetupStatus = async () => {
         try {
-            const res = await fetch('/api/admin/setup/check');
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2000);
+            
+            const res = await fetch('/api/admin/setup/check', {
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
             if (!res.ok) {
                 console.error('Setup check failed:', res.status);
                 setCheckingSetup(false);
