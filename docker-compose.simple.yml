@@ -11,7 +11,11 @@ services:
       if [ ! -f package.json ]; then
         echo 'Cloning repository...' &&
         apk add --no-cache git &&
-        git clone https://github.com/twuijri/atayb.git /tmp/repo &&
+        if [ -n \"$GITHUB_TOKEN\" ]; then
+          git clone https://$GITHUB_TOKEN@github.com/twuijri/atayb.git /tmp/repo;
+        else
+          git clone https://github.com/twuijri/atayb.git /tmp/repo;
+        fi &&
         cp -r /tmp/repo/* /app/ &&
         rm -rf /tmp/repo;
       fi &&
@@ -34,6 +38,8 @@ services:
       - link-manager-data:/app/data
     environment:
       - NODE_ENV=production
+      # For private GitHub repository, add your Personal Access Token:
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL:-}
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY:-}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_KEY:-}

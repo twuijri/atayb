@@ -19,6 +19,13 @@ Professional QR code and link management system with tracking and analytics.
 
 **This method doesn't require building - it clones and runs directly!**
 
+**For Private Repos:** 
+1. Create GitHub token: Settings → Developer settings → Personal access tokens → Generate (with `repo` scope)
+2. In step 4 below, add this environment variable:
+   ```
+   - GITHUB_TOKEN=your_token_here
+   ```
+
 1. Login to Portainer → **Stacks** → **Add Stack**
 2. Name: `link-manager`
 3. Select **Web editor**
@@ -37,7 +44,11 @@ services:
       if [ ! -f package.json ]; then
         echo 'Cloning repository...' &&
         apk add --no-cache git &&
-        git clone https://github.com/twuijri/atayb.git /tmp/repo &&
+        if [ -n \"$GITHUB_TOKEN\" ]; then
+          git clone https://$GITHUB_TOKEN@github.com/twuijri/atayb.git /tmp/repo;
+        else
+          git clone https://github.com/twuijri/atayb.git /tmp/repo;
+        fi &&
         cp -r /tmp/repo/* /app/ &&
         rm -rf /tmp/repo;
       fi &&
@@ -60,6 +71,8 @@ services:
       - link-manager-data:/app/data
     environment:
       - NODE_ENV=production
+      # For private repo, uncomment and add your GitHub token:
+      # - GITHUB_TOKEN=ghp_your_token_here
     networks:
       - link-manager-network
 
@@ -75,9 +88,6 @@ networks:
 5. **Deploy Stack**
 6. First run takes 5-7 minutes (clones, installs, builds)
 7. Access: `http://your-server-ip:3000/admin`
-
-**Note:** For private repo, replace the git clone URL with: 
-`git clone https://YOUR_TOKEN@github.com/twuijri/atayb.git`
 
 ---
 
