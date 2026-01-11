@@ -51,7 +51,7 @@ export default function Login() {
             <div className={styles.loginBox}>
                 <div className={styles.header}>
                     <h1>Admin Panel</h1>
-                    <p>Link Management System</p>
+                    <p>Link Management System v2.0 ✓</p>
                 </div>
 
                 <form onSubmit={handleLogin} className={styles.form}>
