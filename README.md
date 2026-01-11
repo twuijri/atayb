@@ -26,7 +26,10 @@ version: '3.8'
 
 services:
   app:
-    image: atayb-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: link-manager:latest
     container_name: link-manager-app
     restart: unless-stopped
     ports:
