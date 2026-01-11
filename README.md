@@ -11,17 +11,26 @@ Professional QR code and link management system with advanced tracking, PDF cata
 - 🔐 **Admin Panel** - Secure authentication with link and asset management
 - 📲 **Mobile Optimized** - Full responsive design with RTL Arabic support
 - 🐳 **Docker Ready** - Production-ready containerization
+- ☁️ **External Database** - Supabase integration for data persistence
 
 ## Tech Stack
 
 - **Frontend**: Next.js 16.1.1 with React 19.2.3
 - **Styling**: CSS Modules with custom color variables
 - **Backend**: Next.js API Routes
-- **Data**: File-based JSON storage
-- **Deployment**: Docker & Docker Compose
+- **Database**: Supabase (PostgreSQL)
+- **Deployment**: Docker & Portainer Stack
 - **Authentication**: Server-side cookie management
 
 ## Getting Started
+
+### Prerequisites
+
+1. **Supabase Account** (Free tier available)
+   - Sign up at https://supabase.com
+   - Create a new project
+   - Execute `SUPABASE_MIGRATION.sql` in SQL Editor
+   - Get your Project URL, Anon Key, and Service Role Key
 
 ### Local Development
 
@@ -32,61 +41,97 @@ Professional QR code and link management system with advanced tracking, PDF cata
    npm install
    ```
 
-2. **Run Development Server**
+2. **Configure Environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your Supabase credentials
+   ```
+
+3. **Run Development Server**
    ```bash
    npm run dev
    ```
 
-3. **Access Application**
+4. **Access Application**
    - Main site: http://localhost:3000
    - Admin panel: http://localhost:3000/admin
-   - Login credentials: `admin` / `atayb2025`
 
-## Docker Deployment
+## Production Deployment (Portainer)
 
-### Build Docker Image
+### Quick Deploy
+
+```bash
+# 1. Build Docker image
+./build-and-deploy.sh
+
+# 2. Follow the prompts to optionally push to Docker Hub
+```
+
+### Manual Deployment
+
+#### Step 1: Build Docker Image
 
 ```bash
 # Build the image
-docker build -t yourusername/atayb-app:1.0 .
+docker build -t atayb-app:latest .
 
-# Tag as latest
-docker tag yourusername/atayb-app:1.0 yourusername/atayb-app:latest
-```
-
-### Run with Docker Compose
-
-```bash
-docker-compose up -d
-```
-
-### Push to Docker Hub
-
-```bash
-# Login to Docker Hub
+# (Optional) Push to Docker Hub
+docker tag atayb-app:latest your-username/atayb-app:latest
 docker login
-
-# Push image
-docker push yourusername/atayb-app:1.0
-docker push yourusername/atayb-app:latest
-
-# Set to Private on Docker Hub UI
-# 1. Go to hub.docker.com
-# 2. Navigate to your repository settings
-# 3. Set to "Private"
+docker push your-username/atayb-app:latest
 ```
 
-### Deploy on Portainer
+#### Step 2: Deploy on Portainer
 
 1. **Login to Portainer**
-2. **Create New Container**
-   - Image: `yourusername/atayb-app:1.0`
-   - Name: `atayb-app`
-   - Ports: `3000:3000`
-   - Volumes:
-     - `/path/to/data:/app/data`
-     - `/path/to/uploads:/app/public/uploads`
-   - Restart Policy: Always
+2. **Go to Stacks** → **Add Stack**
+3. **Name**: `atayb`
+4. **Copy** the content from `docker-compose.yml`
+5. **Add Environment Variables** (from `.env.portainer`):
+   ```
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_KEY=your-service-role-key
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=your-secure-password
+   ```
+6. **Deploy the stack**
+
+#### Step 3: Verify Deployment
+
+- Access: `http://your-server-ip:3000`
+- Admin: `http://your-server-ip:3000/admin`
+
+### Alternative: Deploy from Git Repository
+
+1. In Portainer, choose **Git Repository** deployment
+2. Provide your repository URL
+3. Set compose path: `docker-compose.yml`
+4. Add environment variables
+5. Deploy
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SUPABASE_URL` | Your Supabase project URL | Yes |
+| `SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
+| `SUPABASE_SERVICE_KEY` | Supabase service role key | Yes |
+| `ADMIN_USERNAME` | Admin login username | Yes |
+| `ADMIN_PASSWORD` | Admin login password | Yes |
+| `NODE_ENV` | Node environment (production) | Auto-set |
+
+## Data Persistence
+
+### Volumes
+- `atayb-uploads`: Uploaded files (PDFs, images)
+- `atayb-data`: Application data
+
+### Database
+All structured data is stored in Supabase (external database):
+- Links and QR codes
+- Tracking analytics
+- Configuration settings
 
 ## Project Structure
 

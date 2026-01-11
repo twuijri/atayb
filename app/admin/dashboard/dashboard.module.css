@@ -114,6 +114,29 @@
     transform: translateY(-1px);
 }
 
+.settingsBtn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: 'Tajawal', sans-serif;
+    border: none;
+    font-size: 14px;
+    background-color: #f0f7ff;
+    color: #1a73e8;
+    border: 1px solid #d0e4ff;
+}
+
+.settingsBtn:hover {
+    background-color: #e3f2fd;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
 .qrBtn {
     background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
     color: var(--primary-dark);

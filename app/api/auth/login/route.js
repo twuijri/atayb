@@ -1,4 +1,25 @@
 import { NextResponse } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+// قراءة معلومات الدخول من ملف config.json أو المتغيرات البيئية
+async function getCredentials() {
+    try {
+        const configPath = path.join(process.cwd(), 'data', 'config.json');
+        const data = await fs.readFile(configPath, 'utf8');
+        const config = JSON.parse(data);
+        return {
+            username: config.adminUsername || 'admin',
+            password: config.adminPassword || 'atayb2025'
+        };
+    } catch (error) {
+        // إذا لم يوجد الملف، استخدم المتغيرات البيئية أو القيم الافتراضية
+        return {
+            username: process.env.ADMIN_USERNAME || 'admin',
+            password: process.env.ADMIN_PASSWORD || 'atayb2025'
+        };
+    }
+}
 
 export async function POST(request) {
     try {
@@ -7,8 +28,11 @@ export async function POST(request) {
 
         console.log('Login attempt:', username);
 
+        // Get credentials from config
+        const credentials = await getCredentials();
+
         // Check credentials
-        if (username === 'admin' && password === 'atayb2025') {
+        if (username === credentials.username && password === credentials.password) {
             console.log('Valid credentials');
             
             // Create response with successful message
@@ -23,6 +47,15 @@ export async function POST(request) {
                 secure: false, // For localhost
                 sameSite: 'lax',
                 maxAge: 86400, // 24 hours
+                path: '/'
+            });
+
+            // Set admin_logged_in cookie
+            response.cookies.set('admin_logged_in', 'true', {
+                httpOnly: false,
+                secure: false,
+                sameSite: 'lax',
+                maxAge: 86400,
                 path: '/'
             });
 

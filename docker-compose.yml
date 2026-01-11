@@ -1,14 +1,37 @@
-version: '3'
+version: '3.8'
 
 services:
   atayb-app:
+    image: atayb-app:latest
     container_name: atayb-app
-    build: .
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
-      - ./data:/app/data
-      - ./public/uploads:/app/public/uploads
+      - atayb-uploads:/app/public/uploads
+      - atayb-data:/app/data
     environment:
       - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_KEY}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    networks:
+      - atayb-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/config', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  atayb-uploads:
+    driver: local
+  atayb-data:
+    driver: local
+
+networks:
+  atayb-network:
+    driver: bridge

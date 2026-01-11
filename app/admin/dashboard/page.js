@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2, ArrowUp, ArrowDown, Plus, Save, LogOut, BarChart2, Eye, MousePointer, QrCode as QrIcon, X, Image as ImageIcon } from 'lucide-react';
+import { Trash2, ArrowUp, ArrowDown, Plus, Save, LogOut, BarChart2, Eye, MousePointer, QrCode as QrIcon, X, Image as ImageIcon, Settings } from 'lucide-react';
 import QRCode from 'qrcode';
 import styles from './dashboard.module.css';
 
@@ -234,6 +234,7 @@ export default function Dashboard() {
                 <h1>إدارة الروابط</h1>
                 <div className={styles.headerActions}>
                     <button onClick={generateQr} className={styles.qrBtn}><QrIcon size={16} /> QR Code</button>
+                    <button onClick={() => router.push('/admin/settings')} className={styles.settingsBtn}><Settings size={16} /> الإعدادات</button>
                     <button onClick={handleLogout} className={styles.logoutBtn}><LogOut size={16} /> خروج</button>
                 </div>
             </header>
