@@ -15,7 +15,29 @@ Professional QR code and link management system with tracking and analytics.
 
 ## Quick Deploy (5 Minutes)
 
-### Option A: Deploy with Web Editor (Easiest)
+### ⚠️ Important: Private Repository Note
+If your GitHub repository is **private**, you need to use one of these methods:
+
+**Method 1: Git Repository with Authentication** (Recommended for private repos)
+- Use Portainer's Repository deployment
+- Add GitHub username and Personal Access Token
+- See "Option B" below
+
+**Method 2: Pre-built Docker Image** (Best for production)
+- Build and push image to Docker Hub (public or private)
+- Use Web Editor with image name
+- See "Option C" below
+
+**Method 3: Make repo public temporarily**
+- Change visibility in GitHub settings
+- Deploy using Web Editor
+- Make private again after
+
+---
+
+### Option A: Web Editor with Public GitHub (Easiest)
+
+**Requirements:** GitHub repository must be public
 
 1. Login to Portainer → **Stacks** → **Add Stack**
 2. Name: `link-manager`
@@ -55,16 +77,44 @@ networks:
 6. Wait for build to complete (first time takes 3-5 minutes)
 7. Access: `http://your-server-ip:3000/admin`
 
-### Option B: Deploy from Git Repository
+### Option B: Git Repository with Authentication (For Private Repos)
 
-If you prefer Git deployment:
-1. Portainer → Stacks → Add Stack
-2. Select **Repository**
-3. Repository URL: `https://github.com/twuijri/atayb.git`
-4. Repository reference: `refs/heads/main`
-5. Compose path: `docker-compose.yml`
-6. Authentication: Add your GitHub credentials if repo is private
-7. Deploy
+**Best for private GitHub repositories**
+
+1. **Create GitHub Personal Access Token:**
+   - GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+   - Generate new token → Select `repo` scope → Generate
+   - Copy the token
+
+2. **Deploy in Portainer:**
+   - Portainer → Stacks → Add Stack
+   - Select **Repository**
+   - Repository URL: `https://github.com/twuijri/atayb.git`
+   - Repository reference: `refs/heads/main`
+   - Compose path: `docker-compose.yml`
+   - **Enable Authentication**
+   - Username: `twuijri`
+   - Personal Access Token: (paste your token)
+   - Deploy
+
+### Option C: Pre-built Docker Image (Production Ready)
+
+**Best for production deployments**
+
+1. **Build and push image to Docker Hub:**
+   ```bash
+   # Login to Docker Hub
+   docker login
+   
+   # Build and push
+   ./build-and-push.sh your-dockerhub-username
+   ```
+
+2. **Deploy in Portainer:**
+   - Stacks → Add Stack → Web editor
+   - Use `docker-compose.hub.yml` content
+   - Replace `twuijri` with your Docker Hub username
+   - Deploy
 
 ---
 
