@@ -11,7 +11,9 @@ services:
       - -c
       - |
         apk add --no-cache git
-        git clone https://${GITHUB_TOKEN}@github.com/twuijri/atayb.git /tmp/repo
+        rm -rf /tmp/repo
+        git clone https://github.com/twuijri/atayb.git /tmp/repo
+        rm -rf /app/*
         cp -r /tmp/repo/. /app/
         rm -rf /tmp/repo
         mkdir -p /app/data
@@ -29,7 +31,6 @@ services:
       - link-manager-data:/app/data
     environment:
       - NODE_ENV=production
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
     networks:
       - link-manager-network
 
