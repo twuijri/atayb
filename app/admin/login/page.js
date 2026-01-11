@@ -28,6 +28,12 @@ function LoginContent() {
     const checkSetupStatus = async () => {
         try {
             const res = await fetch('/api/admin/setup/check');
+            if (!res.ok) {
+                console.error('Setup check failed:', res.status);
+                setCheckingSetup(false);
+                return;
+            }
+            
             const data = await res.json();
             
             if (!data.isConfigured) {
@@ -38,6 +44,7 @@ function LoginContent() {
             }
         } catch (error) {
             console.error('Error checking setup:', error);
+            // Continue to login page even if check fails
             setCheckingSetup(false);
         }
     };
@@ -158,7 +165,17 @@ function LoginContent() {
 
 export default function Login() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                height: '100vh',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+            }}>
+                <div style={{ color: 'white', fontSize: '20px' }}>Loading...</div>
+            </div>
+        }>
             <LoginContent />
         </Suspense>
     );
