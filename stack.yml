@@ -14,6 +14,7 @@ services:
         git clone https://${GITHUB_TOKEN}@github.com/twuijri/atayb.git /tmp/repo
         cp -r /tmp/repo/. /app/
         rm -rf /tmp/repo
+        rm -rf /app/.next
         npm ci
         npm run build
         node .next/standalone/server.js
