@@ -1,5 +1,5 @@
 export const metadata = {
-    title: "لوحة التحكم - أطايب التمور",
+    title: "Admin Panel - Link Manager",
 };
 
 export default function Layout({ children }) {

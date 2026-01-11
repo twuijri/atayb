@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState(null);
+  const [siteTitle, setSiteTitle] = useState('Link Manager');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -14,6 +15,9 @@ export default function Header() {
         const config = await res.json();
         if (config.logo) {
           setHeaderImage(config.logo);
+        }
+        if (config.siteTitle) {
+          setSiteTitle(config.siteTitle);
         }
       } catch (error) {
         console.error('Error fetching config:', error);
@@ -36,15 +40,14 @@ export default function Header() {
       {!headerImage && !isLoading && (
         <div className={styles.defaultHeader}>
           <div className={styles.logoText}>
-            <span className={styles.brandName}>أطايب التمور</span>
-            <span className={styles.brandSub}>Atayeb Altomor</span>
+            <span className={styles.brandName}>{siteTitle}</span>
           </div>
 
           <div className={styles.decorativeLine}></div>
 
           <div className={styles.taglineContainer}>
-            <p className={styles.mainTagline}>وصرنا بين أهلنا في قطر</p>
-            <p className={styles.contactTagline}>لطلب الكميات التواصل على الرقم 71777515</p>
+            <p className={styles.mainTagline}>Link Management System</p>
+            <p className={styles.contactTagline}>Professional QR & Link Sharing</p>
           </div>
         </div>
       )}

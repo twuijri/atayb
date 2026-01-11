@@ -10,13 +10,13 @@ async function getCredentials() {
         const config = JSON.parse(data);
         return {
             username: config.adminUsername || 'admin',
-            password: config.adminPassword || 'atayb2025'
+            password: config.adminPassword || ''
         };
     } catch (error) {
         // إذا لم يوجد الملف، استخدم المتغيرات البيئية أو القيم الافتراضية
         return {
             username: process.env.ADMIN_USERNAME || 'admin',
-            password: process.env.ADMIN_PASSWORD || 'atayb2025'
+            password: process.env.ADMIN_PASSWORD || ''
         };
     }
 }

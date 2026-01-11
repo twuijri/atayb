@@ -8,7 +8,7 @@ const tajawal = Tajawal({
 });
 
 export const metadata = {
-  title: "أطايب التمور | Atayeb Altomor",
+  title: "Link Manager",
   description: "وصرنا بين أهلنا في قطر - لطلب الكميات التواصل على الرقم 71777515",
 };
 

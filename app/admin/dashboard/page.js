@@ -241,12 +241,36 @@ export default function Dashboard() {
 
             {/* Header Image Upload Section */}
             <div className={styles.logoSection}>
-                <h2>الهيدر</h2>
-                <p className={styles.logoDescription}>رفع صورة الهيدر (يفضل أن تكون بحجم 1920x900)</p>
+                <h2>إعدادات الموقع</h2>
+                <p className={styles.logoDescription}>تخصيص مظهر الموقع وعنوان الصفحة الرئيسية</p>
+                
+                {/* Site Title */}
+                <div className={styles.siteTitleSection}>
+                    <label>عنوان الموقع</label>
+                    <input 
+                        type="text"
+                        placeholder="Link Manager"
+                        defaultValue="Link Manager"
+                        onBlur={async (e) => {
+                            try {
+                                await fetch('/api/config', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ siteTitle: e.target.value })
+                                });
+                            } catch (error) {
+                                console.error('Error saving site title:', error);
+                            }
+                        }}
+                        className={styles.siteTitleInput}
+                    />
+                </div>
+
+                {/* Header Image */}
                 <div className={styles.logoUploadContainer}>
                     <label className={styles.logoUploadLabel}>
                         <ImageIcon size={32} />
-                        <span>{uploading ? 'جاري الرفع...' : 'رفع صورة الهيدر'}</span>
+                        <span>{uploading ? 'جاري الرفع...' : 'رفع صورة الهيدر (1920x900)'}</span>
                         <input 
                             type="file" 
                             accept="image/*" 
@@ -400,7 +424,7 @@ export default function Dashboard() {
                         <button className={styles.closeBtn} onClick={() => setShowQr(false)}><X size={20} /></button>
                         <h3>QR Code للموقع</h3>
                         <img src={qrUrl} alt="QR Code" className={styles.qrImage} />
-                        <a href={qrUrl} download="atayb-qr.png" className={styles.downloadBtn}>تنزيل الصورة</a>
+                        <a href={qrUrl} download="qr-code.png" className={styles.downloadBtn}>تنزيل الصورة</a>
                     </div>
                 </div>
             )}

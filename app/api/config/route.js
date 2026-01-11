@@ -10,25 +10,33 @@ export async function GET() {
 
     if (error) {
       console.error('Error fetching config:', error);
-      return Response.json({ logo: null });
+      return Response.json({ logo: null, siteTitle: 'Link Manager' });
     }
 
-    return Response.json(data || { logo: null });
+    return Response.json(data || { logo: null, siteTitle: 'Link Manager' });
   } catch (error) {
     console.error('Error reading config:', error);
-    return Response.json({ logo: null });
+    return Response.json({ logo: null, siteTitle: 'Link Manager' });
   }
 }
 
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { logo } = body;
+    const { logo, siteTitle } = body;
+
+    const updateData = { 
+      id: 1, 
+      updated_at: new Date() 
+    };
+    
+    if (logo !== undefined) updateData.logo = logo;
+    if (siteTitle !== undefined) updateData.siteTitle = siteTitle;
 
     const { data, error } = await supabaseServer
       .from('config')
       .upsert(
-        { id: 1, logo, updated_at: new Date() },
+        updateData,
         { onConflict: 'id' }
       )
       .select()

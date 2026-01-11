@@ -92,10 +92,8 @@ export default function Login() {
         <div className={styles.container}>
             <div className={styles.loginBox}>
                 <div className={styles.header}>
-                    <div className={styles.logo}>
-                        <span className={styles.brandName}>أطايب التمور</span>
-                    </div>
-                    <h1>لوحة التحكم</h1>
+                    <h1>Admin Panel</h1>
+                    <p>Link Management System</p>
                 </div>
 
                 {successMessage && (
@@ -151,7 +149,7 @@ export default function Login() {
                 </form>
 
                 <div className={styles.footer}>
-                    <p>أطايب التمور © 2025</p>
+                    <p>Link Manager © 2026</p>
                 </div>
             </div>
         </div>

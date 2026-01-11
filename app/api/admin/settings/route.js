@@ -28,7 +28,7 @@ async function readConfig() {
       supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
       supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
       adminUsername: process.env.ADMIN_USERNAME || 'admin',
-      adminPassword: process.env.ADMIN_PASSWORD || 'atayb2025'
+      adminPassword: process.env.ADMIN_PASSWORD || ''
     };
   }
 }

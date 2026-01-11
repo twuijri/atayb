@@ -1,9 +1,10 @@
--- Create tables for Atayb App
+-- Create tables for Link Manager
 
 -- Config table (for logo and settings)
 CREATE TABLE IF NOT EXISTS config (
   id BIGINT PRIMARY KEY DEFAULT 1,
   logo TEXT,
+  "siteTitle" TEXT DEFAULT 'Link Manager',
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -53,7 +54,7 @@ CREATE POLICY "Allow authenticated insert stats" ON stats FOR INSERT WITH CHECK 
 CREATE POLICY "Allow authenticated update stats" ON stats FOR UPDATE USING (true);
 
 -- Insert default config
-INSERT INTO config (id, logo) VALUES (1, NULL) ON CONFLICT (id) DO NOTHING;
+INSERT INTO config (id, logo, "siteTitle") VALUES (1, NULL, 'Link Manager') ON CONFLICT (id) DO NOTHING;
 
 -- Initialize storage bucket
 -- Note: Create 'uploads' bucket manually in Supabase Dashboard

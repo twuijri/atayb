@@ -144,8 +144,8 @@ export default function SetupPage() {
     <div className={styles.container}>
       <div className={styles.setupBox}>
         <div className={styles.header}>
-          <h1>🎉 مرحباً في Atayb</h1>
-          <p>الإعداد الأولي للنظام</p>
+          <h1>🎉 Welcome</h1>
+          <p>Initial System Setup</p>
         </div>
 
         {submitting && (

@@ -41,6 +41,34 @@
     margin: 0 0 16px 0;
 }
 
+.siteTitleSection {
+    margin-bottom: 20px;
+}
+
+.siteTitleSection label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.siteTitleInput {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'Tajawal', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.siteTitleInput:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(198, 168, 124, 0.1);
+}
+
 .logoUploadContainer {
     display: flex;
     align-items: center;

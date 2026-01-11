@@ -1,4 +1,4 @@
-# Atayb Altomor - QR Code & Link Generator
+# Link Manager - QR Code & Link Management System
 
 Professional QR code and link management system with advanced tracking, PDF catalog display, and admin dashboard.
 
@@ -332,71 +332,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Author
 
 Created with ❤️ for easy deployment and management
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=atayb2025
-```
-
-## Data Persistence
-
-When running in Docker, ensure volumes are properly configured:
-
-```bash
-# Data directory (links, stats, config)
--v ./data:/app/data
-
-# Uploads directory (PDFs, images)
--v ./public/uploads:/app/public/uploads
-```
-
-## Admin Dashboard Features
-
-- ✅ Create/edit/delete links with custom names
-- ✅ Upload PDF catalogs
-- ✅ View detailed analytics
-- ✅ Upload and manage custom logo
-- ✅ Generate QR codes
-- ✅ Track user engagement
-
-## Troubleshooting
-
-### Container won't start
-- Check volume paths exist
-- Verify port 3000 is available
-- Check Docker logs: `docker logs container-name`
-
-### Data not persisting
-- Ensure volumes are mounted correctly
-- Check permissions on data directory
-- Verify volume path mappings in docker-compose.yml
-
-### PDFs not displaying
-- Verify file upload permissions
-- Check public/uploads directory exists
-- Try different browser for compatibility
-
-### Admin login fails
-- Verify middleware.js is active
-- Check browser cookies enabled
-- Clear browser cache and try again
-
-## Color Scheme
-
-- **Primary**: #2B2B2B (Dark Brown)
-- **Background**: #D4C4B0 (Warm Beige)
-- **Secondary**: #A89080 (Brown)
-- **Accent**: #B8A89A (Beige Accent)
-
-## Support & Documentation
-
-- See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment guide
-- Check `.dockerignore` for build optimization
-- Review `Dockerfile` for production build process
-
-## License
-
-Private project for Atayb Altomor
 
 ---
 
-**Last Updated**: January 2025
-**Version**: 1.0.0 (Production Ready)
+**Last Updated**: January 2026
+**Version**: 2.0.0 (Production Ready with Setup Wizard)
