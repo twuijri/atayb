@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export async function POST(request) {
     try {
@@ -15,29 +16,21 @@ export async function POST(request) {
 
         // Create unique filename
         const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
+        const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+        
+        // Ensure uploads directory exists
+        await fs.mkdir(uploadsDir, { recursive: true });
+        
+        // Save file to local filesystem
+        const filePath = path.join(uploadsDir, filename);
+        await fs.writeFile(filePath, buffer);
 
-        // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabaseServer
-            .storage
-            .from('uploads')
-            .upload(filename, buffer, {
-                contentType: file.type,
-            });
-
-        if (uploadError) {
-            console.error('Upload error:', uploadError);
-            return NextResponse.json({ success: false, error: uploadError.message }, { status: 500 });
-        }
-
-        // Get public URL
-        const { data: urlData } = supabaseServer
-            .storage
-            .from('uploads')
-            .getPublicUrl(filename);
+        // Return public URL
+        const publicUrl = `/uploads/${filename}`;
 
         return NextResponse.json({ 
             success: true, 
-            url: urlData.publicUrl 
+            url: publicUrl 
         });
 
     } catch (error) {

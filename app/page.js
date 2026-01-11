@@ -2,23 +2,15 @@ import Header from '@/components/Header';
 import LinkItem from '@/components/LinkItem';
 import PageTracker from '@/components/PageTracker';
 import styles from './page.module.css';
-import { supabaseServer } from '@/lib/supabase';
+import getDatabase from '@/lib/database';
 
 export const dynamic = 'force-dynamic';
 
 async function getLinks() {
   try {
-    const { data, error } = await supabaseServer
-      .from('links')
-      .select('*')
-      .order('order');
-    
-    if (error) {
-      console.error("Error reading links from Supabase:", error);
-      return [];
-    }
-    
-    return data || [];
+    const db = getDatabase();
+    const links = db.prepare('SELECT * FROM links WHERE is_active = 1 ORDER BY display_order ASC').all();
+    return links || [];
   } catch (error) {
     console.error("Error fetching links:", error);
     return [];
