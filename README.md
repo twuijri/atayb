@@ -15,11 +15,12 @@ Professional QR code and link management system with tracking and analytics.
 
 ## Quick Deploy (5 Minutes)
 
-### Step 1: Deploy on Portainer
+### Option A: Deploy with Web Editor (Easiest)
 
 1. Login to Portainer → **Stacks** → **Add Stack**
 2. Name: `link-manager`
-3. **Copy this Stack code:**
+3. Select **Web editor**
+4. **Copy and paste this code:**
 
 ```yaml
 version: '3.8'
@@ -27,7 +28,7 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: https://github.com/twuijri/atayb.git
       dockerfile: Dockerfile
     image: link-manager:latest
     container_name: link-manager-app
@@ -39,32 +40,37 @@ services:
       - link-manager-data:/app/data
     environment:
       - NODE_ENV=production
-      # Optional: Pre-configure credentials (or set them in setup wizard)
-      # - ADMIN_USERNAME=admin
-      # - ADMIN_PASSWORD=YourSecurePassword123
     networks:
       - link-manager-network
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/config', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
 volumes:
   link-manager-uploads:
-    driver: local
   link-manager-data:
-    driver: local
 
 networks:
   link-manager-network:
-    driver: bridge
 ```
 
-4. **Deploy Stack**
+5. **Deploy Stack**
+6. Wait for build to complete (first time takes 3-5 minutes)
+7. Access: `http://your-server-ip:3000/admin`
 
-### Step 2: Setup Wizard
+### Option B: Deploy from Git Repository
+
+If you prefer Git deployment:
+1. Portainer → Stacks → Add Stack
+2. Select **Repository**
+3. Repository URL: `https://github.com/twuijri/atayb.git`
+4. Repository reference: `refs/heads/main`
+5. Compose path: `docker-compose.yml`
+6. Authentication: Add your GitHub credentials if repo is private
+7. Deploy
+
+---
+
+### Setup Wizard
+
+After deployment completes:
 
 1. Access: `http://your-server-ip:3000/admin`
 2. Complete 2-step setup wizard:
@@ -72,7 +78,7 @@ networks:
    - Configure database (optional - can skip)
 3. Done! ✨
 
-### Step 3: Configure Database (Optional)
+### Configure Database (Optional)
 
 1. Create free account at [supabase.com](https://supabase.com)
 2. Execute `SUPABASE_MIGRATION.sql` in Supabase SQL Editor

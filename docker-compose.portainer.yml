@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: https://github.com/twuijri/atayb.git
+      dockerfile: Dockerfile
+    image: link-manager:latest
+    container_name: link-manager-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - link-manager-uploads:/app/public/uploads
+      - link-manager-data:/app/data
+    environment:
+      - NODE_ENV=production
+      # Optional: Pre-configure credentials (or set in setup wizard)
+      # - ADMIN_USERNAME=admin
+      # - ADMIN_PASSWORD=YourSecurePassword123
+    networks:
+      - link-manager-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/config', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  link-manager-uploads:
+    driver: local
+  link-manager-data:
+    driver: local
+
+networks:
+  link-manager-network:
+    driver: bridge
