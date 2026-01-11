@@ -10,9 +10,9 @@ async function getLinks() {
   try {
     const db = getDatabase();
     const links = db.prepare('SELECT * FROM links WHERE is_active = 1 ORDER BY display_order ASC').all();
-    return links || [];
+    return links;
   } catch (error) {
-    console.error("Error fetching links:", error);
+    console.error('Error:', error);
     return [];
   }
 }

@@ -8,33 +8,19 @@ export async function POST(request) {
         const file = data.get('file');
 
         if (!file) {
-            return NextResponse.json({ success: false, error: 'No file provided' }, { status: 400 });
+            return NextResponse.json({ success: false, error: 'No file' }, { status: 400 });
         }
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-
-        // Create unique filename
         const filename = `${Date.now()}-${file.name.replace(/\s/g, '-')}`;
         const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
         
-        // Ensure uploads directory exists
         await fs.mkdir(uploadsDir, { recursive: true });
-        
-        // Save file to local filesystem
-        const filePath = path.join(uploadsDir, filename);
-        await fs.writeFile(filePath, buffer);
+        await fs.writeFile(path.join(uploadsDir, filename), buffer);
 
-        // Return public URL
-        const publicUrl = `/uploads/${filename}`;
-
-        return NextResponse.json({ 
-            success: true, 
-            url: publicUrl 
-        });
-
+        return NextResponse.json({ success: true, url: `/uploads/${filename}` });
     } catch (error) {
-        console.error('Upload error:', error);
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }

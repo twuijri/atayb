@@ -5,9 +5,9 @@ export async function GET() {
     try {
         const db = getDatabase();
         const links = db.prepare('SELECT * FROM links WHERE is_active = 1 ORDER BY display_order ASC').all();
-        return NextResponse.json(links || []);
+        return NextResponse.json(links);
     } catch (error) {
-        console.error('Error fetching links:', error);
+        console.error('Error:', error);
         return NextResponse.json([]);
     }
 }
@@ -18,39 +18,36 @@ export async function POST(request) {
         const db = getDatabase();
 
         if (Array.isArray(body)) {
-            // Update order for multiple links
-            const updateStmt = db.prepare('UPDATE links SET display_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
-            const transaction = db.transaction((links) => {
-                for (const link of links) {
-                    updateStmt.run(link.display_order || link.order, link.id);
-                }
-            });
-            transaction(body);
-            return NextResponse.json({ success: true, message: 'Links updated' });
+            const stmt = db.prepare('UPDATE links SET display_order = ? WHERE id = ?');
+            for (const link of body) {
+                stmt.run(link.display_order || link.order, link.id);
+            }
+            return NextResponse.json({ success: true });
         }
 
-        return NextResponse.json({ success: false, message: "Invalid data format" }, { status: 400 });
+        if (body.id) {
+            db.prepare('UPDATE links SET title = ?, url = ?, icon = ?, display_order = ? WHERE id = ?')
+                .run(body.title, body.url, body.icon, body.display_order || 0, body.id);
+        } else {
+            db.prepare('INSERT INTO links (title, url, icon, display_order) VALUES (?, ?, ?, ?)')
+                .run(body.title, body.url, body.icon, body.display_order || 0);
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error saving links:', error);
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        console.error('Error:', error);
+        return NextResponse.json({ success: false }, { status: 500 });
     }
 }
 
 export async function DELETE(request) {
     try {
-        const body = await request.json();
-        const { id } = body;
-
-        if (!id) {
-            return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
-        }
-
+        const { id } = await request.json();
         const db = getDatabase();
         db.prepare('DELETE FROM links WHERE id = ?').run(id);
-
-        return NextResponse.json({ success: true, message: "Link deleted" });
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error deleting link:', error);
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        console.error('Error:', error);
+        return NextResponse.json({ success: false }, { status: 500 });
     }
 }
