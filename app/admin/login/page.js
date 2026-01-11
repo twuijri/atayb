@@ -1,29 +1,22 @@
 "use client";
 
-import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { LogIn } from 'lucide-react';
 import styles from './login.module.css';
 
-function LoginContent() {
+export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
-    const [successMessage, setSuccessMessage] = useState('');
     const router = useRouter();
-    const searchParams = useSearchParams();
 
     useEffect(() => {
         // Check if setup is needed
         checkSetupStatus();
-        
-        // Check for success message
-        if (searchParams.get('setup') === 'success') {
-            setSuccessMessage('تم الإعداد بنجاح! يمكنك الآن تسجيل الدخول');
-        }
-    }, [searchParams]);
+    }, []);
 
     const checkSetupStatus = async () => {
         try {
@@ -160,23 +153,5 @@ function LoginContent() {
                 </div>
             </div>
         </div>
-    );
-}
-
-export default function Login() {
-    return (
-        <Suspense fallback={
-            <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                height: '100vh',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-            }}>
-                <div style={{ color: 'white', fontSize: '20px' }}>Loading...</div>
-            </div>
-        }>
-            <LoginContent />
-        </Suspense>
     );
 }
