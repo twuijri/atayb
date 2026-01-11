@@ -15,7 +15,78 @@ Professional QR code and link management system with tracking and analytics.
 
 ## Quick Deploy (5 Minutes)
 
-### ⚠️ Important: Private Repository Note
+### 🚀 Super Simple Method (No Build Required!)
+
+**This method doesn't require building - it clones and runs directly!**
+
+1. Login to Portainer → **Stacks** → **Add Stack**
+2. Name: `link-manager`
+3. Select **Web editor**
+4. **Copy this entire code:**
+
+```yaml
+version: '3.8'
+
+services:
+  app:
+    image: node:20-alpine
+    container_name: link-manager-app
+    restart: unless-stopped
+    working_dir: /app
+    command: sh -c "
+      if [ ! -f package.json ]; then
+        echo 'Cloning repository...' &&
+        apk add --no-cache git &&
+        git clone https://github.com/twuijri/atayb.git /tmp/repo &&
+        cp -r /tmp/repo/* /app/ &&
+        rm -rf /tmp/repo;
+      fi &&
+      if [ ! -d node_modules ]; then
+        echo 'Installing dependencies...' &&
+        npm ci;
+      fi &&
+      if [ ! -d .next ]; then
+        echo 'Building application...' &&
+        npm run build;
+      fi &&
+      echo 'Starting application...' &&
+      node .next/standalone/server.js
+    "
+    ports:
+      - "3000:3000"
+    volumes:
+      - link-manager-app:/app
+      - link-manager-uploads:/app/public/uploads
+      - link-manager-data:/app/data
+    environment:
+      - NODE_ENV=production
+    networks:
+      - link-manager-network
+
+volumes:
+  link-manager-app:
+  link-manager-uploads:
+  link-manager-data:
+
+networks:
+  link-manager-network:
+```
+
+5. **Deploy Stack**
+6. First run takes 5-7 minutes (clones, installs, builds)
+7. Access: `http://your-server-ip:3000/admin`
+
+**Note:** For private repo, replace the git clone URL with: 
+`git clone https://YOUR_TOKEN@github.com/twuijri/atayb.git`
+
+---
+
+### ⚠️ Alternative Methods
+
+<details>
+<summary>Click to see other deployment methods</summary>
+
+### Important: Private Repository Note
 If your GitHub repository is **private**, you need to use one of these methods:
 
 **Method 1: Git Repository with Authentication** (Recommended for private repos)
@@ -97,24 +168,7 @@ networks:
    - Personal Access Token: (paste your token)
    - Deploy
 
-### Option C: Pre-built Docker Image (Production Ready)
-
-**Best for production deployments**
-
-1. **Build and push image to Docker Hub:**
-   ```bash
-   # Login to Docker Hub
-   docker login
-   
-   # Build and push
-   ./build-and-push.sh your-dockerhub-username
-   ```
-
-2. **Deploy in Portainer:**
-   - Stacks → Add Stack → Web editor
-   - Use `docker-compose.hub.yml` content
-   - Replace `twuijri` with your Docker Hub username
-   - Deploy
+</details>
 
 ---
 
