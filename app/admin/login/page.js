@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogIn } from 'lucide-react';
 import styles from './login.module.css';
@@ -10,54 +10,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [checkingSetup, setCheckingSetup] = useState(true);
     const router = useRouter();
-
-    useEffect(() => {
-        // Check if setup is needed with timeout
-        const timeoutId = setTimeout(() => {
-            console.log('Setup check timeout - showing login page');
-            setCheckingSetup(false);
-        }, 3000); // 3 second timeout
-        
-        checkSetupStatus().finally(() => {
-            clearTimeout(timeoutId);
-        });
-        
-        return () => clearTimeout(timeoutId);
-    }, []);
-
-    const checkSetupStatus = async () => {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2000);
-            
-            const res = await fetch('/api/admin/setup/check', {
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            if (!res.ok) {
-                console.error('Setup check failed:', res.status);
-                setCheckingSetup(false);
-                return;
-            }
-            
-            const data = await res.json();
-            
-            if (!data.isConfigured) {
-                // Redirect to setup page
-                router.push('/admin/setup');
-            } else {
-                setCheckingSetup(false);
-            }
-        } catch (error) {
-            console.error('Error checking setup:', error);
-            // Continue to login page even if check fails
-            setCheckingSetup(false);
-        }
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -94,17 +47,6 @@ export default function Login() {
         }
     };
 
-    if (checkingSetup) {
-        return (
-            <div className={styles.container}>
-                <div className={styles.loginBox}>
-                    <div className={styles.loadingSpinner}></div>
-                    <p>جاري التحقق من الإعداد...</p>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className={styles.container}>
             <div className={styles.loginBox}>
@@ -112,12 +54,6 @@ export default function Login() {
                     <h1>Admin Panel</h1>
                     <p>Link Management System</p>
                 </div>
-
-                {successMessage && (
-                    <div className={styles.success}>
-                        {successMessage}
-                    </div>
-                )}
 
                 <form onSubmit={handleLogin} className={styles.form}>
                     <div className={styles.inputGroup}>
