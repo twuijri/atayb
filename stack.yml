@@ -14,6 +14,10 @@ services:
         git clone https://${GITHUB_TOKEN}@github.com/twuijri/atayb.git /tmp/repo
         cp -r /tmp/repo/. /app/
         rm -rf /tmp/repo
+        mkdir -p /app/data
+        if [ ! -f /app/data/config.json ]; then
+          echo '{"adminUsername":"admin","adminPassword":"password"}' > /app/data/config.json
+        fi
         rm -rf /app/.next
         npm ci
         npm run build
