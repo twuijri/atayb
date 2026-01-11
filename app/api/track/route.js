@@ -30,27 +30,3 @@ export async function GET() {
         return NextResponse.json({ page_view: 0, link_clicks: 0, unique_visitors: 0 });
     }
 }
-
-export async function GET() {
-    try {
-        const { data: stats, error } = await supabaseServer
-            .from('stats')
-            .select('*')
-            .order('id', { ascending: true })
-            .limit(1)
-            .single();
-
-        if (error && error.code !== 'PGRST116') {
-            console.error('Error fetching stats:', error);
-            return NextResponse.json({ pageViews: 0, clicks: {} });
-        }
-
-        return NextResponse.json({
-            pageViews: stats?.page_views || 0,
-            clicks: stats?.link_clicks || {}
-        });
-    } catch (error) {
-        console.error('Error fetching stats:', error);
-        return NextResponse.json({ pageViews: 0, clicks: {} });
-    }
-}
