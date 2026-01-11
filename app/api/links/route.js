@@ -1,19 +1,11 @@
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase';
+import getDatabase from '@/lib/database';
 
 export async function GET() {
     try {
-        const { data, error } = await supabaseServer
-            .from('links')
-            .select('*')
-            .order('order', { ascending: true });
-
-        if (error) {
-            console.error('Error fetching links:', error);
-            return NextResponse.json([]);
-        }
-
-        return NextResponse.json(data || []);
+        const db = getDatabase();
+        const links = db.prepare('SELECT * FROM links WHERE is_active = 1 ORDER BY display_order ASC').all();
+        return NextResponse.json(links || []);
     } catch (error) {
         console.error('Error fetching links:', error);
         return NextResponse.json([]);
@@ -23,19 +15,18 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
+        const db = getDatabase();
 
         if (Array.isArray(body)) {
-            // Upsert all links (for reordering)
-            const { error } = await supabaseServer
-                .from('links')
-                .upsert(body, { onConflict: 'id' });
-
-            if (error) {
-                console.error('Error updating links:', error);
-                return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-            }
-
-            return NextResponse.json({ success: true, message: "Links updated" });
+            // Update order for multiple links
+            const updateStmt = db.prepare('UPDATE links SET display_order = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+            const transaction = db.transaction((links) => {
+                for (const link of links) {
+                    updateStmt.run(link.display_order || link.order, link.id);
+                }
+            });
+            transaction(body);
+            return NextResponse.json({ success: true, message: 'Links updated' });
         }
 
         return NextResponse.json({ success: false, message: "Invalid data format" }, { status: 400 });
@@ -54,15 +45,8 @@ export async function DELETE(request) {
             return NextResponse.json({ success: false, message: "ID is required" }, { status: 400 });
         }
 
-        const { error } = await supabaseServer
-            .from('links')
-            .delete()
-            .eq('id', id);
-
-        if (error) {
-            console.error('Error deleting link:', error);
-            return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-        }
+        const db = getDatabase();
+        db.prepare('DELETE FROM links WHERE id = ?').run(id);
 
         return NextResponse.json({ success: true, message: "Link deleted" });
     } catch (error) {
