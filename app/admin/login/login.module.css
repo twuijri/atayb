@@ -150,20 +150,6 @@
     font-size: 14px;
     margin: 0;
 }
-    color: var(--primary-dark);
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-family: 'Tajawal', sans-serif;
-    letter-spacing: 0.5px;
-}
 
 .button:hover:not(:disabled) {
     transform: translateY(-2px);
