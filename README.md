@@ -37,25 +37,45 @@ This is the easiest way! Deploy the application first, then configure the databa
 4. **Web Editor**: Copy and paste the content from `docker-compose.yml`
 5. **Environment Variables** (Advanced mode):
    ```env
+This is the easiest way! Deploy the application first, then configure everything from the web interface.
+
+#### Step 1: Deploy on Portainer (No configuration needed!)
+
+1. **Login to Portainer**
+2. **Go to Stacks** → **Add Stack**
+3. **Name**: `atayb`
+4. **Web Editor**: Copy and paste the content from `docker-compose.yml`
+5. **Skip Environment Variables** (or add only if you want):
+   ```env
+   # Optional: Only if you want to pre-set credentials
+   # Otherwise, you'll create them on first access
    ADMIN_USERNAME=admin
    ADMIN_PASSWORD=YourSecurePassword123!
    ```
-   > Note: Database variables are optional - you can configure them later from the admin panel!
    
 6. **Deploy the stack**
 
-#### Step 2: Configure Database from Admin Panel
+#### Step 2: First-Time Setup (Portainer-Style)
 
-1. **Access Admin Panel**: `http://your-server-ip:3000/admin`
-2. **Login** with the credentials you set (admin / YourSecurePassword123!)
-3. **Click "⚙️ Settings"** button in the dashboard
-4. **Setup Supabase**:
-   - Get your Supabase credentials from https://supabase.com
+1. **Access the Application**: `http://your-server-ip:3000/admin`
+2. **Setup Wizard** will automatically appear:
+   - **Step 1**: Create admin account (username + password)
+   - **Step 2**: Configure database (optional - can skip and configure later)
+3. **Complete Setup** - Everything is saved to volume automatically!
+
+#### Step 3: Configure Database (Now or Later)
+
+**Option A: During Setup**
+- Enter Supabase credentials in Step 2 of setup wizard
+
+**Option B: After Setup (Anytime)**
+1. Login to admin panel
+2. Click "⚙️ Settings" button
+3. Enter Supabase credentials:
+   - Get from https://supabase.com
    - Execute `SUPABASE_MIGRATION.sql` in Supabase SQL Editor
    - Enter Project URL, Anon Key, and Service Role Key
-5. **Test Connection** to verify credentials
-6. **Save Settings**
-7. **Restart Container** in Portainer (Containers → atayb-app → Restart)
+4. Test Connection → Save → Restart Container
 
 **That's it!** Your application is now fully configured and running! ✨
 
@@ -66,12 +86,8 @@ This is the easiest way! Deploy the application first, then configure the databa
 1. In Portainer, choose **Git Repository** deployment
 2. **Repository URL**: `https://github.com/twuijri/atayb.git`
 3. **Compose path**: `docker-compose.yml`
-4. **Environment Variables** (minimal):
-   ```env
-   ADMIN_USERNAME=admin
-   ADMIN_PASSWORD=YourSecurePassword123!
-   ```
-5. **Deploy** → Then configure database from admin panel (see Step 2 above)
+4. **Environment Variables**: Can be completely empty!
+5. **Deploy** → Access `/admin` and complete the setup wizard
 
 ---
 
