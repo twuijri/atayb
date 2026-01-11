@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn } from 'lucide-react';
 import styles from './login.module.css';
 
@@ -10,11 +10,42 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [checkingSetup, setCheckingSetup] = useState(true);
+    const [successMessage, setSuccessMessage] = useState('');
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        // Check if setup is needed
+        checkSetupStatus();
+        
+        // Check for success message
+        if (searchParams.get('setup') === 'success') {
+            setSuccessMessage('تم الإعداد بنجاح! يمكنك الآن تسجيل الدخول');
+        }
+    }, [searchParams]);
+
+    const checkSetupStatus = async () => {
+        try {
+            const res = await fetch('/api/admin/setup/check');
+            const data = await res.json();
+            
+            if (!data.isConfigured) {
+                // Redirect to setup page
+                router.push('/admin/setup');
+            } else {
+                setCheckingSetup(false);
+            }
+        } catch (error) {
+            console.error('Error checking setup:', error);
+            setCheckingSetup(false);
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccessMessage('');
         setIsLoading(true);
 
         try {
@@ -46,6 +77,17 @@ export default function Login() {
         }
     };
 
+    if (checkingSetup) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.loginBox}>
+                    <div className={styles.loadingSpinner}></div>
+                    <p>جاري التحقق من الإعداد...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.loginBox}>
@@ -55,6 +97,12 @@ export default function Login() {
                     </div>
                     <h1>لوحة التحكم</h1>
                 </div>
+
+                {successMessage && (
+                    <div className={styles.success}>
+                        {successMessage}
+                    </div>
+                )}
 
                 <form onSubmit={handleLogin} className={styles.form}>
                     <div className={styles.inputGroup}>

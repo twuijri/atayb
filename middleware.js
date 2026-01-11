@@ -3,8 +3,10 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
     // Check if the path starts with /admin
     if (request.nextUrl.pathname.startsWith('/admin')) {
-        // Allow access to login page
-        if (request.nextUrl.pathname === '/admin/login') {
+        // Allow access to login, setup pages, and setup/check API
+        if (request.nextUrl.pathname === '/admin/login' || 
+            request.nextUrl.pathname === '/admin/setup' ||
+            request.nextUrl.pathname.startsWith('/api/admin/setup')) {
             return NextResponse.next();
         }
 
@@ -22,5 +24,5 @@ export function middleware(request) {
 }
 
 export const config = {
-    matcher: ['/admin/:path*'],
+    matcher: ['/admin/:path*', '/api/admin/:path*'],
 };
