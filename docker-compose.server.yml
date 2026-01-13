@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  atayb:
+    image: node:20-alpine
+    container_name: atayb
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -c "
+      apk add --no-cache git &&
+      git clone https://github.com/twuijri/atayb.git /tmp/source &&
+      cd /tmp/source &&
+      npm ci &&
+      npm run build &&
+      cp -r .next/standalone/* /app/ &&
+      cp -r .next/static /app/.next/static &&
+      cp -r public /app/public &&
+      cp -r lib /app/lib &&
+      mkdir -p /app/data /app/public/uploads &&
+      if [ ! -f /app/data/config.json ]; then
+        echo '{\"adminUsername\":\"admin\",\"adminPassword\":\"password\"}' > /app/data/config.json;
+      fi &&
+      cd /app &&
+      node server.js
+      "
+    ports:
+      - "3000:3000"
+    volumes:
+      - atayb-uploads:/app/public/uploads
+      - atayb-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+
+volumes:
+  atayb-uploads:
+  atayb-data:
