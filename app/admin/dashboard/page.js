@@ -21,16 +21,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchData();
-        
-        // Timeout to prevent infinite loading
-        const timeout = setTimeout(() => {
-            if (loading) {
-                setLoading(false);
-            }
-        }, 5000);
-
-        return () => clearTimeout(timeout);
-    }, [loading]);
+    }, []);
 
     const fetchData = async () => {
         try {
