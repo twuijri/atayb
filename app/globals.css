@@ -1,25 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #2B2B2B;
-  /* Dark Brown/Black from Atayb */
-  --primary-dark: #1a1a1a;
-  --primary-light: #8B7355;
-  --secondary: #A89080;
-  /* Warm Brown/Taupe from Atayb */
+  --primary: #C5C2B4;
+  /* Main beige color */
+  --primary-dark: #A89080;
+  --primary-light: #E5E2D4;
+  --secondary: #8B7355;
+  /* Warm Brown accent */
   --accent: #B8A89A;
-  /* Warm Beige Accent */
-  --background: #C5C2B4;
-  /* Warm Taupe/Beige Background */
+  /* Darker beige accent */
+  --background: #F5F4F0;
+  /* Light background */
   --surface: #FFFFFF;
   --text-main: #3D3D3D;
   /* Dark text */
   --text-secondary: #7A7A7A;
-  --border: #C9B9AB;
+  --border: #C5C2B4;
   --error: #D32F2F;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 2px 8px rgba(197, 194, 180, 0.15);
+  --shadow-md: 0 4px 16px rgba(197, 194, 180, 0.2);
+  --shadow-lg: 0 8px 24px rgba(197, 194, 180, 0.25);
 }
 
 * {
