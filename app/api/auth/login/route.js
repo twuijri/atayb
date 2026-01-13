@@ -20,11 +20,11 @@ export async function POST(request) {
 
         if (username === credentials.username && password === credentials.password) {
             const response = NextResponse.json({ success: true, message: 'تم تسجيل الدخول بنجاح' });
-            response.cookies.set('auth_token', 'valid_session_token', {
-                httpOnly: false,
-                secure: false,
+            response.cookies.set('auth_token', 'authenticated', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
-                maxAge: 86400,
+                maxAge: 604800, // 7 days
                 path: '/'
             });
             return response;
