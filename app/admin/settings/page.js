@@ -1,97 +1,84 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Save, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import styles from './settings.module.css';
 
 export default function SettingsPage() {
-  const [config, setConfig] = useState({
-    supabaseUrl: '',
-    supabaseAnonKey: '',
-    supabaseServiceKey: '',
-    adminUsername: '',
-    adminPassword: ''
-  });
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const router = useRouter();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newUsername, setNewUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
 
-  useEffect(() => {
-    fetchConfig();
-  }, []);
-
-  const fetchConfig = async () => {
-    try {
-      const res = await fetch('/api/admin/settings');
-      if (res.ok) {
-        const data = await res.json();
-        setConfig(data);
-      }
-    } catch (error) {
-      console.error('Error fetching config:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSaving(true);
     setMessage('');
+    
+    if (!currentPassword) {
+      setMessage('❌ يرجى إدخال كلمة المرور الحالية');
+      return;
+    }
+    
+    if (newPassword && newPassword !== confirmPassword) {
+      setMessage('❌ كلمة المرور الجديدة غير متطابقة');
+      return;
+    }
+    
+    if (newPassword && newPassword.length < 4) {
+      setMessage('❌ كلمة المرور يجب أن تكون 4 أحرف على الأقل');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
-      });
-
-      const data = await res.json();
-      
-      if (res.ok) {
-        setMessage('✅ تم حفظ الإعدادات بنجاح! سيتم تطبيق التغييرات عند إعادة تشغيل التطبيق.');
-      } else {
-        setMessage('❌ ' + (data.error || 'حدث خطأ في الحفظ'));
-      }
-    } catch (error) {
-      setMessage('❌ خطأ في الاتصال: ' + error.message);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const testConnection = async () => {
-    setMessage('🔍 جاري اختبار الاتصال...');
-    try {
-      const res = await fetch('/api/admin/test-connection', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          supabaseUrl: config.supabaseUrl,
-          supabaseAnonKey: config.supabaseAnonKey
+          currentPassword,
+          newUsername: newUsername || undefined,
+          newPassword: newPassword || undefined
         })
       });
 
       const data = await res.json();
       
       if (res.ok) {
-        setMessage('✅ الاتصال بقاعدة البيانات ناجح!');
+        setMessage('✅ تم تحديث الإعدادات بنجاح!');
+        setCurrentPassword('');
+        setNewUsername('');
+        setNewPassword('');
+        setConfirmPassword('');
+        
+        if (newPassword) {
+          setTimeout(async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            router.push('/admin/login');
+          }, 1500);
+        }
       } else {
-        setMessage('❌ فشل الاتصال: ' + (data.error || 'تحقق من البيانات'));
+        setMessage('❌ ' + (data.error || 'كلمة المرور الحالية غير صحيحة'));
       }
     } catch (error) {
       setMessage('❌ خطأ في الاتصال: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
-
-  if (loading) {
-    return <div className={styles.container}>جاري التحميل...</div>;
-  }
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>⚙️ إعدادات النظام</h1>
-        <p>إدارة اتصال قاعدة البيانات ومعلومات الدخول</p>
+        <button onClick={() => router.push('/admin/dashboard')} className={styles.backBtn}>
+          <ArrowLeft size={20} /> رجوع
+        </button>
+        <h1>⚙️ إعدادات الحساب</h1>
+        <p>تغيير اسم المستخدم وكلمة المرور</p>
       </div>
 
       {message && (
@@ -102,99 +89,79 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.section}>
-          <h2>🗄️ إعدادات Supabase</h2>
+          <h2>🔐 كلمة المرور الحالية</h2>
+          <p className={styles.sectionDesc}>يجب إدخال كلمة المرور الحالية للتأكيد</p>
           
           <div className={styles.field}>
-            <label>رابط المشروع (Project URL)</label>
-            <input
-              type="text"
-              value={config.supabaseUrl}
-              onChange={(e) => setConfig({...config, supabaseUrl: e.target.value})}
-              placeholder="https://xxxxx.supabase.co"
-              required
-            />
-            <small>مثال: https://qxhsywktcdhsmdkcdyor.supabase.co</small>
-          </div>
-
-          <div className={styles.field}>
-            <label>Anon Key</label>
+            <label>كلمة المرور الحالية *</label>
             <div className={styles.passwordField}>
               <input
                 type={showPasswords ? "text" : "password"}
-                value={config.supabaseAnonKey}
-                onChange={(e) => setConfig({...config, supabaseAnonKey: e.target.value})}
-                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 required
               />
+              <button 
+                type="button" 
+                onClick={() => setShowPasswords(!showPasswords)}
+                className={styles.toggleBtn}
+              >
+                {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
-            <small>من Settings → API → anon public</small>
           </div>
-
-          <div className={styles.field}>
-            <label>Service Role Key</label>
-            <div className={styles.passwordField}>
-              <input
-                type={showPasswords ? "text" : "password"}
-                value={config.supabaseServiceKey}
-                onChange={(e) => setConfig({...config, supabaseServiceKey: e.target.value})}
-                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                required
-              />
-            </div>
-            <small>من Settings → API → service_role (اضغط reveal)</small>
-          </div>
-
-          <div className={styles.checkboxField}>
-            <label>
-              <input
-                type="checkbox"
-                checked={showPasswords}
-                onChange={(e) => setShowPasswords(e.target.checked)}
-              />
-              <span>إظهار المفاتيح</span>
-            </label>
-          </div>
-
-          <button type="button" onClick={testConnection} className={styles.testButton}>
-            🔍 اختبار الاتصال
-          </button>
         </div>
 
         <div className={styles.section}>
-          <h2>🔐 معلومات تسجيل الدخول</h2>
+          <h2>👤 اسم المستخدم الجديد (اختياري)</h2>
+          <p className={styles.sectionDesc}>اترك الحقل فارغاً إذا لم ترغب بالتغيير</p>
           
           <div className={styles.field}>
-            <label>اسم المستخدم</label>
+            <label>اسم المستخدم الجديد</label>
             <input
               type="text"
-              value={config.adminUsername}
-              onChange={(e) => setConfig({...config, adminUsername: e.target.value})}
-              placeholder="admin"
-              required
+              value={newUsername}
+              onChange={(e) => setNewUsername(e.target.value)}
+              placeholder="اترك فارغاً للإبقاء على الحالي"
             />
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <h2>🔑 كلمة المرور الجديدة (اختياري)</h2>
+          <p className={styles.sectionDesc}>اترك الحقول فارغة إذا لم ترغب بالتغيير</p>
+          
+          <div className={styles.field}>
+            <label>كلمة المرور الجديدة</label>
+            <input
+              type={showPasswords ? "text" : "password"}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="اترك فارغاً للإبقاء على الحالي"
+            />
+            <small>يجب أن تكون 4 أحرف على الأقل</small>
           </div>
 
           <div className={styles.field}>
-            <label>كلمة المرور</label>
+            <label>تأكيد كلمة المرور الجديدة</label>
             <input
               type={showPasswords ? "text" : "password"}
-              value={config.adminPassword}
-              onChange={(e) => setConfig({...config, adminPassword: e.target.value})}
-              placeholder="••••••••"
-              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="أعد إدخال كلمة المرور"
             />
-            <small>⚠️ استخدم كلمة مرور قوية</small>
           </div>
         </div>
 
         <div className={styles.actions}>
-          <button type="submit" disabled={saving} className={styles.saveButton}>
-            {saving ? '⏳ جاري الحفظ...' : '💾 حفظ التغييرات'}
+          <button type="submit" disabled={loading} className={styles.saveButton}>
+            <Save size={18} />
+            {loading ? 'جاري الحفظ...' : 'حفظ التغييرات'}
           </button>
         </div>
 
         <div className={styles.warning}>
-          <strong>⚠️ تنبيه:</strong> بعد حفظ التغييرات، يجب إعادة تشغيل التطبيق لتطبيق الإعدادات الجديدة.
+          <strong>⚠️ تنبيه:</strong> إذا قمت بتغيير كلمة المرور، سيتم تسجيل خروجك تلقائياً.
         </div>
       </form>
     </div>

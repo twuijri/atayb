@@ -60,7 +60,6 @@ export default function Login() {
                         <input
                             id="username"
                             type="text"
-                            placeholder="admin"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className={styles.input}
@@ -74,7 +73,6 @@ export default function Login() {
                         <input
                             id="password"
                             type="password"
-                            placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className={styles.input}

@@ -8,7 +8,7 @@ import styles from './dashboard.module.css';
 
 export default function Dashboard() {
     const [links, setLinks] = useState([]);
-    const [stats, setStats] = useState({ pageViews: 0, clicks: {} });
+    const [stats, setStats] = useState({ page_views: 0, link_clicks: 0 });
     const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({});
@@ -39,8 +39,8 @@ export default function Dashboard() {
             const linksData = await linksRes.json();
             const statsData = await statsRes.json();
 
-            setLinks(Array.isArray(linksData) ? linksData.sort((a, b) => a.order - b.order) : []);
-            setStats(statsData || { pageViews: 0, clicks: {} });
+            setLinks(Array.isArray(linksData) ? linksData.sort((a, b) => (a.order || 0) - (b.order || 0)) : []);
+            setStats(statsData || { page_views: 0, link_clicks: 0 });
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch data:', error);
@@ -285,16 +285,14 @@ export default function Dashboard() {
                     <Eye size={24} className={styles.statIcon} />
                     <div>
                         <div className={styles.statLabel}>عدد الزيارات</div>
-                        <div className={styles.statValue}>{stats.pageViews}</div>
+                        <div className={styles.statValue}>{stats.page_views || 0}</div>
                     </div>
                 </div>
                 <div className={styles.statCard}>
                     <MousePointer size={24} className={styles.statIcon} />
                     <div>
                         <div className={styles.statLabel}>إجمالي النقرات</div>
-                        <div className={styles.statValue}>
-                            {Object.values(stats.clicks).reduce((a, b) => a + b, 0)}
-                        </div>
+                        <div className={styles.statValue}>{stats.link_clicks || 0}</div>
                     </div>
                 </div>
             </div>
@@ -390,7 +388,7 @@ export default function Dashboard() {
                                 <div className={styles.info}>
                                     <span className={styles.linkTitle}>{link.title || '(بدون عنوان)'}</span>
                                     <span className={styles.linkType}>
-                                        {link.type} • {stats.clicks[link.id] || 0} نقرات
+                                        {link.type} • {link.clicks || 0} نقرات
                                     </span>
                                 </div>
                                 <div className={styles.controls}>
