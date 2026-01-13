@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #C5C2B4;
-  /* Main beige color */
-  --primary-dark: #A89080;
-  --primary-light: #E5E2D4;
-  --secondary: #8B7355;
+  --primary: #8B7355;
   /* Warm Brown accent */
-  --accent: #B8A89A;
+  --primary-dark: #6B5845;
+  --primary-light: #A89080;
+  --secondary: #B8A89A;
   /* Darker beige accent */
-  --background: #F5F4F0;
-  /* Light background */
+  --accent: #C5C2B4;
+  /* Main beige color */
+  --background: #C5C2B4;
+  /* Main background - beige */
   --surface: #FFFFFF;
   --text-main: #3D3D3D;
   /* Dark text */
   --text-secondary: #7A7A7A;
-  --border: #C5C2B4;
+  --border: #A89080;
   --error: #D32F2F;
   --shadow-sm: 0 2px 8px rgba(197, 194, 180, 0.15);
   --shadow-md: 0 4px 16px rgba(197, 194, 180, 0.2);
