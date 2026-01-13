@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server';
-import getDatabase from '@/lib/database';
+const { readStats, writeStats } = require('@/lib/database');
 
 export async function POST(request) {
     try {
         const { type } = await request.json();
-        const db = getDatabase();
+        const stats = readStats();
 
         if (type === 'page_view') {
-            db.prepare('UPDATE analytics SET page_views = page_views + 1 WHERE id = 1').run();
+            stats.page_views = (stats.page_views || 0) + 1;
         } else if (type === 'click') {
-            db.prepare('UPDATE analytics SET link_clicks = link_clicks + 1 WHERE id = 1').run();
+            stats.link_clicks = (stats.link_clicks || 0) + 1;
         }
 
+        writeStats(stats);
         return NextResponse.json({ success: true });
     } catch (error) {
         return NextResponse.json({ success: false }, { status: 500 });
@@ -20,9 +21,8 @@ export async function POST(request) {
 
 export async function GET() {
     try {
-        const db = getDatabase();
-        const stats = db.prepare('SELECT * FROM analytics WHERE id = 1').get();
-        return NextResponse.json(stats || { page_views: 0, link_clicks: 0 });
+        const stats = readStats();
+        return NextResponse.json(stats);
     } catch (error) {
         return NextResponse.json({ page_views: 0, link_clicks: 0 });
     }

@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
-import getDatabase from '@/lib/database';
+const { readLinks, writeLinks } = require('@/lib/database');
 
 export async function GET() {
     try {
-        const db = getDatabase();
-        const links = db.prepare('SELECT * FROM links WHERE is_active = 1 ORDER BY display_order ASC').all();
+        const links = readLinks();
         return NextResponse.json(links);
     } catch (error) {
-        console.error('Error:', error);
         return NextResponse.json([]);
     }
 }
@@ -15,27 +13,23 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const db = getDatabase();
+        let links = readLinks();
 
         if (Array.isArray(body)) {
-            const stmt = db.prepare('UPDATE links SET display_order = ? WHERE id = ?');
-            for (const link of body) {
-                stmt.run(link.display_order || link.order, link.id);
-            }
+            writeLinks(body);
             return NextResponse.json({ success: true });
         }
 
         if (body.id) {
-            db.prepare('UPDATE links SET title = ?, url = ?, icon = ?, display_order = ? WHERE id = ?')
-                .run(body.title, body.url, body.icon, body.display_order || 0, body.id);
+            links = links.map(link => link.id === body.id ? { ...link, ...body } : link);
         } else {
-            db.prepare('INSERT INTO links (title, url, icon, display_order) VALUES (?, ?, ?, ?)')
-                .run(body.title, body.url, body.icon, body.display_order || 0);
+            const newId = links.length > 0 ? Math.max(...links.map(l => l.id)) + 1 : 1;
+            links.push({ ...body, id: newId });
         }
 
+        writeLinks(links);
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error:', error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
@@ -43,11 +37,11 @@ export async function POST(request) {
 export async function DELETE(request) {
     try {
         const { id } = await request.json();
-        const db = getDatabase();
-        db.prepare('DELETE FROM links WHERE id = ?').run(id);
+        let links = readLinks();
+        links = links.filter(link => link.id !== id);
+        writeLinks(links);
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error:', error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
