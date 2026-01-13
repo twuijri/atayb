@@ -1,20 +1,18 @@
 version: '3.8'
 
 services:
-  atayb:
-    build:
-      context: https://github.com/twuijri/atayb.git
-      dockerfile: Dockerfile
-    container_name: atayb
+  link-manager:
+    image: twuijri/link-manager:latest
+    container_name: link-manager
     restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
-      - atayb-uploads:/app/public/uploads
-      - atayb-data:/app/data
+      - link-manager-uploads:/app/public/uploads
+      - link-manager-data:/app/data
     environment:
       - NODE_ENV=production
 
 volumes:
-  atayb-uploads:
-  atayb-data:
+  link-manager-uploads:
+  link-manager-data:
