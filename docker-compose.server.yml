@@ -9,10 +9,12 @@ services:
     command: >
       sh -c "
       apk add --no-cache git &&
+      rm -rf /tmp/source &&
       git clone https://github.com/twuijri/atayb.git /tmp/source &&
       cd /tmp/source &&
       npm ci &&
       npm run build &&
+      mkdir -p /app/.next &&
       cp -r .next/standalone/* /app/ &&
       cp -r .next/static /app/.next/static &&
       cp -r public /app/public &&
