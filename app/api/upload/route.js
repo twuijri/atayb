@@ -22,9 +22,9 @@ export async function POST(request) {
 
         log('success', 'تم رفع ملف', { filename, size: bytes.byteLength });
 
-        log('error', 'فشل رفع الملف', { error: error.message });
         return NextResponse.json({ success: true, url: `/api/uploads/${filename}` });
     } catch (error) {
+        log('error', 'فشل رفع الملف', { error: error.message });
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 }
