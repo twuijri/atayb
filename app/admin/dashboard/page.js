@@ -139,6 +139,8 @@ export default function Dashboard() {
         if (!file) return;
 
         try {
+            console.log('📤 بدء رفع الصورة:', file.name);
+            
             const formDataUpload = new FormData();
             formDataUpload.append('file', file);
 
@@ -147,18 +149,22 @@ export default function Dashboard() {
                 body: formDataUpload,
             });
             
-            const data = await res.json();
+            console.log('📡 Response status:', res.status);
+            console.log('📡 Response ok:', res.ok);
             
-            if (data.success) {
-                console.log('✅ تم رفع الصورة:', data.url);
-                setFormData({ ...formData, image: data.url });
+            const data = await res.json();
+            console.log('📦 Response data:', data);
+            
+            if (res.ok && data.success && data.url) {
+                console.log('✅ تم رفع الصورة بنجاح:', data.url);
+                handleFormChange('image', data.url);
             } else {
-                console.error('❌ فشل رفع الصورة:', data.error);
-                alert('فشل رفع الصورة');
+                console.error('❌ فشل رفع الصورة:', data);
+                alert('فشل رفع الصورة: ' + (data.error || 'خطأ غير معروف'));
             }
         } catch (error) {
-            console.error('❌ خطأ في رفع الصورة:', error);
-            alert('حدث خطأ أثناء رفع الصورة');
+            console.error('💥 خطأ في رفع الصورة:', error);
+            alert('حدث خطأ أثناء رفع الصورة: ' + error.message);
         }
     };
 
