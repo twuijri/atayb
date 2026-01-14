@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { log } from '@/lib/logger';
 
 async function getCredentials() {
     try {
@@ -26,6 +27,8 @@ export async function POST(request) {
         if (username === credentials.username && password === credentials.password) {
             console.log('✅ [API] البيانات صحيحة! جاري إنشاء Cookie');
             
+            log('success', 'تسجيل دخول ناجح', { username });
+            
             const response = NextResponse.json({ success: true, message: 'تم تسجيل الدخول بنجاح' });
             
             const cookieOptions = {
@@ -41,11 +44,13 @@ export async function POST(request) {
             
             console.log('✅ [API] تم إرسال الاستجابة بنجاح');
             return response;
-        } else {
+        } ellog('warning', 'محاولة تسجيل دخول فاشلة', { username });
+            se {
             console.error('❌ [API] بيانات خاطئة');
             return NextResponse.json({ success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' }, { status: 401 });
         }
     } catch (error) {
+        log('error', 'خطأ في تسجيل الدخول', { error: error.message });
         console.error('💥 [API] خطأ في السيرفر:', error);
         return NextResponse.json({ success: false, message: 'حدث خطأ في الخادم: ' + error.message }, { status: 500 });
     }

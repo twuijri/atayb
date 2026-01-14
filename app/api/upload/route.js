@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { log } from '@/lib/logger';
 
 export async function POST(request) {
     try {
@@ -19,6 +20,9 @@ export async function POST(request) {
         await fs.mkdir(uploadsDir, { recursive: true });
         await fs.writeFile(path.join(uploadsDir, filename), buffer);
 
+        log('success', 'تم رفع ملف', { filename, size: bytes.byteLength });
+
+        log('error', 'فشل رفع الملف', { error: error.message });
         return NextResponse.json({ success: true, url: `/api/uploads/${filename}` });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });

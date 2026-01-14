@@ -1,0 +1,180 @@
+.container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: var(--foreground);
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.autoRefresh {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.autoRefresh input {
+    cursor: pointer;
+}
+
+.btnRefresh,
+.btnClear {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.btnRefresh {
+    background: var(--primary);
+    color: white;
+}
+
+.btnRefresh:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btnClear {
+    background: #dc3545;
+    color: white;
+}
+
+.btnClear:hover {
+    background: #c82333;
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filters button {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filters button:hover {
+    border-color: var(--primary);
+}
+
+.filters button.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--foreground);
+    font-size: 1.1rem;
+}
+
+.logs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.logEntry {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid var(--border);
+}
+
+.logEntry.error {
+    border-left-color: #dc3545;
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.logEntry.warning {
+    border-left-color: #ffc107;
+    background: rgba(255, 193, 7, 0.05);
+}
+
+.logEntry.success {
+    border-left-color: #28a745;
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.logEntry.info {
+    border-left-color: #17a2b8;
+    background: rgba(23, 162, 184, 0.05);
+}
+
+.logHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.logLevel {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.logTime {
+    color: var(--foreground);
+    opacity: 0.7;
+    font-size: 0.85rem;
+    margin-right: auto;
+}
+
+.logMessage {
+    font-size: 0.95rem;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+}
+
+.logData {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    margin: 0.5rem 0 0 0;
+}
+
+.iconError { color: #dc3545; }
+.iconWarning { color: #ffc107; }
+.iconSuccess { color: #28a745; }
+.iconInfo { color: #17a2b8; }
