@@ -4,26 +4,39 @@ import path from 'path';
 
 export async function GET(request, { params }) {
   try {
-    const slug = params.slug ? params.slug.join('/') : '';
+    console.log('📁 [Uploads] Params:', params);
+    console.log('📁 [Uploads] Params.slug:', params.slug);
+    
+    // Handle both awaited and non-awaited params
+    const resolvedParams = await Promise.resolve(params);
+    const slug = resolvedParams.slug ? resolvedParams.slug.join('/') : '';
+    
+    console.log('📁 [Uploads] Resolved slug:', slug);
     
     if (!slug) {
+      console.error('❌ [Uploads] No slug provided');
       return NextResponse.json({ error: 'No file specified' }, { status: 400 });
     }
 
     const filePath = path.join(process.cwd(), 'public', 'uploads', slug);
+    console.log('📁 [Uploads] File path:', filePath);
 
     // Security check
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
     if (!filePath.startsWith(uploadsDir)) {
+      console.error('❌ [Uploads] Security: Path traversal attempt');
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     if (!fs.existsSync(filePath)) {
+      console.error('❌ [Uploads] File not found:', filePath);
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
 
     const fileBuffer = fs.readFileSync(filePath);
     const contentType = getContentType(filePath);
+    
+    console.log('✅ [Uploads] Serving file:', slug, 'Type:', contentType);
 
     return new NextResponse(fileBuffer, {
       headers: {
@@ -33,8 +46,8 @@ export async function GET(request, { params }) {
       },
     });
   } catch (error) {
-    console.error('File serving error:', error);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('💥 [Uploads] Error:', error);
+    return NextResponse.json({ error: 'Server error: ' + error.message }, { status: 500 });
   }
 }
 
