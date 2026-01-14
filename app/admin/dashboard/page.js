@@ -138,16 +138,27 @@ export default function Dashboard() {
         const file = e.target.files[0];
         if (!file) return;
 
-        const formDataUpload = new FormData();
-        formDataUpload.append('file', file);
+        try {
+            const formDataUpload = new FormData();
+            formDataUpload.append('file', file);
 
-        const res = await fetch('/api/upload', {
-            method: 'POST',
-            body: formDataUpload,
-        });
-        const data = await res.json();
-        if (data.success) {
-            setFormData({ ...formData, image: data.url });
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formDataUpload,
+            });
+            
+            const data = await res.json();
+            
+            if (data.success) {
+                console.log('✅ تم رفع الصورة:', data.url);
+                setFormData({ ...formData, image: data.url });
+            } else {
+                console.error('❌ فشل رفع الصورة:', data.error);
+                alert('فشل رفع الصورة');
+            }
+        } catch (error) {
+            console.error('❌ خطأ في رفع الصورة:', error);
+            alert('حدث خطأ أثناء رفع الصورة');
         }
     };
 
@@ -367,15 +378,37 @@ export default function Dashboard() {
                                 {formData.type === 'pdf' && (
                                     <div className={styles.formGroup}>
                                         <label>صورة الكاتلوج (اختياري)</label>
-                                        <input type="file" onChange={handleImageUpload} />
-                                        {formData.image && <img src={formData.image} alt="Preview" className={styles.preview} />}
+                                        <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                        {formData.image && (
+                                            <div className={styles.imagePreview}>
+                                                <img src={formData.image} alt="Preview" className={styles.preview} />
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, image: null })}
+                                                    className={styles.removeImageBtn}
+                                                >
+                                                    <X size={16} /> حذف
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 {formData.type !== 'pdf' && (
                                     <div className={styles.formGroup}>
                                         <label>صورة الشعار (اختياري)</label>
-                                        <input type="file" onChange={handleImageUpload} />
-                                        {formData.image && <img src={formData.image} alt="Preview" className={styles.preview} />}
+                                        <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                        {formData.image && (
+                                            <div className={styles.imagePreview}>
+                                                <img src={formData.image} alt="Preview" className={styles.preview} />
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, image: null })}
+                                                    className={styles.removeImageBtn}
+                                                >
+                                                    <X size={16} /> حذف
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 <div className={styles.actions}>
