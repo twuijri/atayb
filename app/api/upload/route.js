@@ -19,7 +19,7 @@ export async function POST(request) {
         await fs.mkdir(uploadsDir, { recursive: true });
         await fs.writeFile(path.join(uploadsDir, filename), buffer);
 
-        return NextResponse.json({ success: true, url: `/uploads/${filename}` });
+        return NextResponse.json({ success: true, url: `/api/uploads/${filename}` });
     } catch (error) {
         return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
