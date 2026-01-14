@@ -44,8 +44,8 @@ export async function POST(request) {
             
             console.log('✅ [API] تم إرسال الاستجابة بنجاح');
             return response;
-        } ellog('warning', 'محاولة تسجيل دخول فاشلة', { username });
-            se {
+        } else {
+            log('warning', 'محاولة تسجيل دخول فاشلة', { username });
             console.error('❌ [API] بيانات خاطئة');
             return NextResponse.json({ success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' }, { status: 401 });
         }
