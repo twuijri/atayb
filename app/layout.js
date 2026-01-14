@@ -1,5 +1,7 @@
 import { Tajawal } from "next/font/google"; // Tajawal is a nice Arabic font
 import "./globals.css";
+import { readFileSync } from 'fs';
+import path from 'path';
 
 const tajawal = Tajawal({
   subsets: ["arabic"],
@@ -7,10 +9,31 @@ const tajawal = Tajawal({
   variable: "--font-tajawal",
 });
 
-export const metadata = {
-  title: "Link Manager",
-  description: "وصرنا بين أهلنا في قطر - لطلب الكميات التواصل على الرقم 71777515",
-};
+function getMetadata() {
+  try {
+    const configPath = path.join(process.cwd(), 'data', 'config.json');
+    const config = JSON.parse(readFileSync(configPath, 'utf8'));
+    return {
+      title: config.siteTitle || 'Link Manager',
+      description: config.siteDescription || 'منصة إدارة الروابط',
+      openGraph: {
+        title: config.siteTitle || 'Link Manager',
+        description: config.siteDescription || 'منصة إدارة الروابط',
+      }
+    };
+  } catch (error) {
+    return {
+      title: 'Link Manager',
+      description: 'منصة إدارة الروابط',
+      openGraph: {
+        title: 'Link Manager',
+        description: 'منصة إدارة الروابط',
+      }
+    };
+  }
+}
+
+export const metadata = getMetadata();
 
 export const viewport = {
   width: 'device-width',

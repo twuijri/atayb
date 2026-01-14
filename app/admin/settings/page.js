@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import styles from './settings.module.css';
@@ -10,9 +10,28 @@ export default function SettingsPage() {
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [siteTitle, setSiteTitle] = useState('');
+  const [siteDescription, setSiteDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/admin/settings');
+      if (res.ok) {
+        const data = await res.json();
+        setSiteTitle(data.siteTitle || '');
+        setSiteDescription(data.siteDescription || '');
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +61,9 @@ export default function SettingsPage() {
         body: JSON.stringify({
           currentPassword,
           newUsername: newUsername || undefined,
-          newPassword: newPassword || undefined
+          newPassword: newPassword || undefined,
+          siteTitle,
+          siteDescription
         })
       });
 
@@ -88,6 +109,31 @@ export default function SettingsPage() {
       )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.section}>
+          <h2>🌐 معلومات الموقع</h2>
+          <p className={styles.sectionDesc}>تظهر عند مشاركة الرابط في واتساب، تيليجرام، وغيرها</p>
+          
+          <div className={styles.field}>
+            <label>عنوان الموقع</label>
+            <input
+              type="text"
+              value={siteTitle}
+              onChange={(e) => setSiteTitle(e.target.value)}
+              placeholder="مثال: متجري الإلكتروني"
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label>وصف الموقع</label>
+            <textarea
+              value={siteDescription}
+              onChange={(e) => setSiteDescription(e.target.value)}
+              placeholder="مثال: أفضل المنتجات بأسعار منافسة"
+              rows={3}
+            />
+          </div>
+        </div>
+
         <div className={styles.section}>
           <h2>🔐 كلمة المرور الحالية</h2>
           <p className={styles.sectionDesc}>يجب إدخال كلمة المرور الحالية للتأكيد</p>

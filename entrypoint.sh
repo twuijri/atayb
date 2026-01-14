@@ -5,7 +5,7 @@ mkdir -p /app/data
 
 # Create config.json if it doesn't exist
 if [ ! -f /app/data/config.json ]; then
-  echo '{"adminUsername":"admin","adminPassword":"password"}' > /app/data/config.json
+  echo '{"adminUsername":"admin","adminPassword":"password","siteTitle":"Link Manager","siteDescription":"منصة إدارة الروابط"}' > /app/data/config.json
 fi
 
 # Create links.json if it doesn't exist

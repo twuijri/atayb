@@ -4,9 +4,21 @@ import path from 'path';
 
 const CONFIG_FILE = path.join(process.cwd(), 'data', 'config.json');
 
+export async function GET() {
+  try {
+    const config = JSON.parse(readFileSync(CONFIG_FILE, 'utf8'));
+    return NextResponse.json({ 
+      siteTitle: config.siteTitle || 'Link Manager',
+      siteDescription: config.siteDescription || 'منصة إدارة الروابط'
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'حدث خطأ' }, { status: 500 });
+  }
+}
+
 export async function POST(request) {
   try {
-    const { currentPassword, newUsername, newPassword } = await request.json();
+    const { currentPassword, newUsername, newPassword, siteTitle, siteDescription } = await request.json();
     
     const config = JSON.parse(readFileSync(CONFIG_FILE, 'utf8'));
     
@@ -20,6 +32,14 @@ export async function POST(request) {
     
     if (newPassword && newPassword.trim()) {
       config.adminPassword = newPassword.trim();
+    }
+    
+    if (siteTitle !== undefined) {
+      config.siteTitle = siteTitle.trim() || 'Link Manager';
+    }
+    
+    if (siteDescription !== undefined) {
+      config.siteDescription = siteDescription.trim() || 'منصة إدارة الروابط';
     }
     
     writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
