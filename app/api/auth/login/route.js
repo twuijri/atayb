@@ -30,7 +30,7 @@ export async function POST(request) {
             
             const cookieOptions = {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false, // Allow HTTP in production (for Docker without HTTPS)
                 sameSite: 'lax',
                 maxAge: 604800, // 7 days
                 path: '/'
