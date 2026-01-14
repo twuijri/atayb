@@ -18,28 +18,40 @@ export default function Login() {
         setIsLoading(true);
 
         try {
-            console.log('Sending login request...');
+            console.log('🔐 بدء تسجيل الدخول...');
+            console.log('📝 البيانات:', { username, password: '***' });
             
             // Call API endpoint to set cookie server-side
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password }),
+                credentials: 'include' // مهم لإرسال الكوكيز
             });
 
+            console.log('📡 استجابة السيرفر - Status:', response.status);
+            console.log('📡 Headers:', Object.fromEntries(response.headers.entries()));
+
             const data = await response.json();
+            console.log('📦 البيانات المستلمة:', data);
 
             if (response.ok && data.success) {
-                console.log('Login successful, redirecting...');
+                console.log('✅ تسجيل الدخول نجح!');
+                console.log('🍪 الكوكيز:', document.cookie);
+                
                 // Force page reload to ensure cookie is recognized
-                window.location.href = '/admin/dashboard';
+                setTimeout(() => {
+                    console.log('🔄 جاري التحويل...');
+                    window.location.href = '/admin/dashboard';
+                }, 500);
             } else {
+                console.error('❌ فشل تسجيل الدخول:', data.message);
                 setError(data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة');
                 setIsLoading(false);
             }
         } catch (err) {
-            console.error('Login error:', err);
-            setError('حدث خطأ في الاتصال');
+            console.error('💥 خطأ في تسجيل الدخول:', err);
+            setError('حدث خطأ في الاتصال: ' + err.message);
             setIsLoading(false);
         }
     };
