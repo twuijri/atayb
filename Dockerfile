@@ -35,6 +35,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy lib folder (needed for database module)
 COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
 
+# Copy entrypoint script
+COPY --chown=nextjs:nodejs entrypoint.sh ./
+RUN chmod +x /app/entrypoint.sh
+
 # Expose persistence directories
 RUN mkdir -p /app/public/uploads && chown nextjs:nodejs /app/public/uploads
 RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
@@ -44,4 +48,4 @@ USER nextjs
 EXPOSE 3000
 ENV PORT 3000
 
-CMD ["node", "server.js"]
+CMD ["/app/entrypoint.sh"]
