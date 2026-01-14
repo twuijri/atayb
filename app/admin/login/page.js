@@ -31,10 +31,8 @@ export default function Login() {
 
             if (response.ok && data.success) {
                 console.log('Login successful, redirecting...');
-                // Small delay to ensure cookie is set
-                setTimeout(() => {
-                    router.push('/admin/dashboard');
-                }, 200);
+                // Force page reload to ensure cookie is recognized
+                window.location.href = '/admin/dashboard';
             } else {
                 setError(data.message || 'اسم المستخدم أو كلمة المرور غير صحيحة');
                 setIsLoading(false);
